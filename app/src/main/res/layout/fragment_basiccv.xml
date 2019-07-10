@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginStart="12sp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="36sp"
+            android:orientation="horizontal"
+            android:layout_marginTop="12sp"
+            android:weightSum="5">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/personalDetails"
+                android:textColor="@color/white"
+                android:textSize="24sp"/>
+
+            <ImageView
+                android:id="@+id/personal_button"
+                android:layout_width="36sp"
+                android:layout_height="36sp"
+                android:src="@drawable/editicon"
+                android:layout_alignParentEnd="true"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="36sp"
+            android:orientation="horizontal"
+            android:layout_marginTop="12sp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/education"
+                android:textColor="@color/white"
+                android:textSize="24sp" />
+
+            <ImageView
+                android:id="@+id/education_button"
+                android:layout_width="36sp"
+                android:layout_height="36sp"
+                android:src="@drawable/editicon"
+                android:layout_alignParentEnd="true"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="36sp"
+            android:orientation="horizontal"
+            android:layout_marginTop="12sp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/experience"
+                android:textColor="@color/white"
+                android:textSize="24sp" />
+
+            <ImageView
+                android:id="@+id/experience_button"
+                android:layout_width="36sp"
+                android:layout_height="36sp"
+                android:src="@drawable/editicon"
+                android:layout_alignParentEnd="true"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="36sp"
+            android:orientation="horizontal"
+            android:layout_marginTop="12sp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Internships"
+                android:textColor="@color/white"
+                android:textSize="24sp"/>
+
+            <ImageView
+                android:id="@+id/internship_button"
+                android:layout_width="36sp"
+                android:layout_height="36sp"
+                android:src="@drawable/editicon"
+                android:layout_alignParentEnd="true"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="36sp"
+            android:orientation="horizontal"
+            android:layout_marginTop="12sp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/skills"
+                android:textColor="@color/white"
+                android:textSize="24sp"/>
+
+            <ImageView
+                android:id="@+id/skills_button"
+                android:layout_width="36sp"
+                android:layout_height="36sp"
+                android:src="@drawable/editicon"
+                android:layout_alignParentEnd="true"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/generatepdf"
+        android:background="@color/colorPrimaryDark"
+        android:textColor="@color/white"
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>

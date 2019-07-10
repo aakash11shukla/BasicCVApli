@@ -1,0 +1,72 @@
+package com.example.basiccvapli;
+
+
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.basiccvapli.adapters.ExperienceAdapter;
+import com.example.basiccvapli.viewmodels.ExperienceViewModel;
+import com.google.firebase.database.DataSnapshot;
+
+import java.util.Objects;
+
+
+public class ExperienceListFragment extends Fragment {
+
+    private FragmentManager fragmentManager;
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_experience_list, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        ExperienceViewModel viewModel = ViewModelProviders.of(this).get(ExperienceViewModel.class);
+        viewModel.init(getContext());
+
+        Objects.requireNonNull(getView()).findViewById(R.id.add_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, new ExperienceFragment())
+                        .commit();
+            }
+        });
+
+        RecyclerView recyclerView = Objects.requireNonNull(getView()).findViewById(R.id.experiences_list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        DataSnapshot experienceList = null;
+
+        final ExperienceAdapter adapter = new ExperienceAdapter(experienceList);
+        recyclerView.setAdapter(adapter);
+
+        viewModel.getDetails().observe(getViewLifecycleOwner(), new Observer<DataSnapshot>() {
+            @Override
+            public void onChanged(DataSnapshot dataSnapshot) {
+
+            }
+        });
+    }
+}
