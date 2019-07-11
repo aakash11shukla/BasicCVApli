@@ -6,20 +6,34 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.basiccvapli.R;
+import com.example.basiccvapli.models.Experience;
 import com.google.firebase.database.DataSnapshot;
 
-public class ExperienceAdapter extends RecyclerView.Adapter<ExperienceAdapter.ExperienceViewHolder> {
+public class ExperienceAdapter extends ListAdapter<Experience, ExperienceAdapter.ExperienceViewHolder> {
 
-    private DataSnapshot mExperienceList;
-    public ExperienceAdapter(DataSnapshot experienceList) {
-        mExperienceList = experienceList;
-    }
+    private static final DiffUtil.ItemCallback<Experience> DIFF_CALLBACK = new DiffUtil.ItemCallback<Experience>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Experience oldItem, @NonNull Experience newItem) {
+            return oldItem.getEid() == newItem.getEid();
+        }
 
-    public void setmExperienceList(DataSnapshot mExperienceList) {
-        this.mExperienceList = mExperienceList;
+        @Override
+        public boolean areContentsTheSame(@NonNull Experience oldItem, @NonNull Experience newItem) {
+            return oldItem.getCompanyName().equals(newItem.getCompanyName()) &&
+                    oldItem.getIndustry().equals(newItem.getIndustry()) &&
+                    oldItem.getDesignation().equals(newItem.getDesignation()) &&
+                    oldItem.getLocation().equals(newItem.getLocation()) &&
+                    oldItem.getFromDate().equals(newItem.getFromDate()) &&
+                    oldItem.getToDate().equals(newItem.getToDate());
+        }
+    };
+    public ExperienceAdapter() {
+        super(DIFF_CALLBACK);
     }
 
     @NonNull
@@ -29,20 +43,14 @@ public class ExperienceAdapter extends RecyclerView.Adapter<ExperienceAdapter.Ex
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ExperienceViewHolder experienceViewHolder, int i) {
-
-//        Experience experience = mExperienceList.get(i);
-//        experienceViewHolder.comapnyNameTextview.setText(experience.getCompanyName());
-//        experienceViewHolder.industryTextview.setText(experience.getIndustry());
-//        experienceViewHolder.designationTextview.setText(experience.getDesignation());
-//        experienceViewHolder.locationTextview.setText(experience.getLocation());
-//        experienceViewHolder.fromTextview.setText(experience.getFromDate());
-//        experienceViewHolder.toTextview.setText(experience.getToDate());
-    }
-
-    @Override
-    public int getItemCount() {
-        return (mExperienceList != null)?(int)mExperienceList.getChildrenCount():0;
+    public void onBindViewHolder(@NonNull ExperienceViewHolder holder, int position) {
+        Experience experience = getItem(position);
+        holder.comapnyNameTextview.setText(experience.getCompanyName());
+        holder.designationTextview.setText(experience.getDesignation());
+        holder.fromTextview.setText(experience.getFromDate());
+        holder.toTextview.setText(experience.getToDate());
+        holder.locationTextview.setText(experience.getLocation());
+        holder.industryTextview.setText(experience.getIndustry());
     }
 
     class ExperienceViewHolder extends RecyclerView.ViewHolder{
