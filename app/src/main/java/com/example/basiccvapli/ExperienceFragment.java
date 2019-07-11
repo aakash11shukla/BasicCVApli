@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -31,13 +32,14 @@ public class ExperienceFragment extends Fragment {
 
     private ExperienceViewModel viewModel;
     private FragmentExperienceBinding binding;
+    private FragmentManager fragmentManager;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         viewModel = ViewModelProviders.of(this).get(ExperienceViewModel.class);
         viewModel.init(getContext());
-
+        fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
         binding.setExperienceviewmodel(viewModel);
     }
 
@@ -86,6 +88,8 @@ public class ExperienceFragment extends Fragment {
                     experience.setToDate(toDate);
                     viewModel.save(experience);
                     Toast.makeText(getContext(), "EXPERIENCE ADDED SUCCESSFULLY", Toast.LENGTH_SHORT).show();
+
+                    fragmentManager.popBackStack();
                 }
             }
         });

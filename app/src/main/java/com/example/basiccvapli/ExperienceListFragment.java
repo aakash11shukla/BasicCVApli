@@ -61,6 +61,7 @@ public class ExperienceListFragment extends Fragment {
             public void onClick(View v) {
                 fragmentManager.beginTransaction()
                         .replace(R.id.fragment_container, new ExperienceFragment())
+                        .addToBackStack(ExperienceFragment.class.getSimpleName())
                         .commit();
             }
         });
@@ -68,8 +69,6 @@ public class ExperienceListFragment extends Fragment {
         RecyclerView recyclerView = Objects.requireNonNull(getView()).findViewById(R.id.experiences_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
-        final DataSnapshot experienceList = null;
-
         final ExperienceAdapter adapter = new ExperienceAdapter();
         recyclerView.setAdapter(adapter);
 

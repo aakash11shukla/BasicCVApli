@@ -40,6 +40,7 @@ public class BasiccvFragment extends Fragment {
             public void onClick(View v) {
                 fragmentManager.beginTransaction()
                         .replace(R.id.fragment_container, new ExperienceListFragment())
+                        .addToBackStack(ExperienceListFragment.class.getSimpleName())
                         .commit();
             }
         });

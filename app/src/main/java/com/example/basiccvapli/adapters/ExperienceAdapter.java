@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.basiccvapli.R;
 import com.example.basiccvapli.models.Experience;
-import com.google.firebase.database.DataSnapshot;
 
 public class ExperienceAdapter extends ListAdapter<Experience, ExperienceAdapter.ExperienceViewHolder> {
 
