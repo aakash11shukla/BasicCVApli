@@ -2,7 +2,6 @@ package com.example.basiccvapli;
 
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,22 +13,14 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.basiccvapli.adapters.ExperienceAdapter;
 import com.example.basiccvapli.models.Experience;
 import com.example.basiccvapli.viewmodels.ExperienceViewModel;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.GenericTypeIndicator;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 
@@ -68,7 +59,6 @@ public class ExperienceListFragment extends Fragment {
         RecyclerView recyclerView = Objects.requireNonNull(getView()).findViewById(R.id.experiences_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
-        final DataSnapshot experienceList = null;
 
         final ExperienceAdapter adapter = new ExperienceAdapter();
         recyclerView.setAdapter(adapter);
@@ -77,7 +67,7 @@ public class ExperienceListFragment extends Fragment {
             @Override
             public void onChanged(DataSnapshot dataSnapshot) {
                 ArrayList<Experience> experiences = new ArrayList<>();
-                for(DataSnapshot ds: dataSnapshot.child("Experience").getChildren()){
+                for (DataSnapshot ds : dataSnapshot.child("Experience").getChildren()) {
                     experiences.add(ds.getValue(Experience.class));
                 }
                 adapter.submitList(experiences);
