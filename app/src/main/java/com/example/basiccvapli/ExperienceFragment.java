@@ -3,14 +3,6 @@ package com.example.basiccvapli;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +10,15 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProviders;
+
 import com.example.basiccvapli.databinding.FragmentExperienceBinding;
-import com.example.basiccvapli.models.Experience;
 import com.example.basiccvapli.viewmodels.ExperienceViewModel;
-import com.google.firebase.database.DataSnapshot;
 
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
@@ -31,13 +28,14 @@ public class ExperienceFragment extends Fragment {
 
     private ExperienceViewModel viewModel;
     private FragmentExperienceBinding binding;
+    private FragmentManager fragmentManager;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         viewModel = ViewModelProviders.of(this).get(ExperienceViewModel.class);
         viewModel.init(getContext());
-
+        fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
         binding.setExperienceviewmodel(viewModel);
     }
 
@@ -58,34 +56,12 @@ public class ExperienceFragment extends Fragment {
         Objects.requireNonNull(getView()).findViewById(R.id.addExperienceButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                String companyName = viewModel.companyName.getValue();
-                String designation = viewModel.designation.getValue();
-                String industry = viewModel.industry.getValue();
-                String location = viewModel.location.getValue();
-                String fromDate = viewModel.from.getValue();
-                String toDate = viewModel.to.getValue();
-
-                if (companyName == null || companyName.isEmpty() || designation == null || designation.isEmpty() || industry == null || industry.isEmpty() || location == null || location.isEmpty() || fromDate == null || fromDate.equals(getString(R.string.click_to_set_the_date)) || toDate == null || toDate.equals(getString(R.string.click_to_set_the_date))) {
+                if (viewModel.anyBlank()) {
                     Toast.makeText(getContext(), "PLEASE FILL IN ALL CEREDENTIALS", Toast.LENGTH_SHORT).show();
                 } else {
-
-                    viewModel.companyName.setValue("");
-                    viewModel.industry.setValue("");
-                    viewModel.designation.setValue("");
-                    viewModel.location.setValue("");
-                    viewModel.from.setValue("");
-                    viewModel.to.setValue("");
-
-                    Experience experience = new Experience();
-                    experience.setCompanyName(companyName);
-                    experience.setIndustry(industry);
-                    experience.setDesignation(designation);
-                    experience.setLocation(location);
-                    experience.setFromDate(fromDate);
-                    experience.setToDate(toDate);
-                    viewModel.save(experience);
+                    viewModel.save();
                     Toast.makeText(getContext(), "EXPERIENCE ADDED SUCCESSFULLY", Toast.LENGTH_SHORT).show();
+                    fragmentManager.popBackStack();
                 }
             }
         });
