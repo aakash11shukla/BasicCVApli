@@ -38,8 +38,9 @@ public class FirebaseQueryLiveData extends LiveData<DataSnapshot> {
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             if(getValue() == null)
                 setValue(dataSnapshot);
-
-            setValue(null);
+            else{
+                setValue(null);
+            }
         }
 
         @Override
