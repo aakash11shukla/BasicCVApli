@@ -19,12 +19,11 @@ import java.util.List;
 
 public class FirebaseUtil {
     private static final int RC_SIGN_IN = 123;
-    public static FirebaseDatabase firebaseDatabase;
+    private static FirebaseDatabase firebaseDatabase;
     public static DatabaseReference databaseReference;
-    public static FirebaseAuth firebaseAuth;
-    public static FirebaseAuth.AuthStateListener authStateListener;
+    private static FirebaseAuth firebaseAuth;
+    private static FirebaseAuth.AuthStateListener authStateListener;
     private static FirebaseUtil firebaseUtil;
-    private static Activity caller;
 
     private FirebaseUtil() {
     }
@@ -34,24 +33,21 @@ public class FirebaseUtil {
             firebaseUtil = new FirebaseUtil();
             firebaseDatabase = FirebaseDatabase.getInstance();
             firebaseAuth = FirebaseAuth.getInstance();
-            caller = callerActivity;
             authStateListener = new FirebaseAuth.AuthStateListener() {
                 @Override
                 public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                     if (firebaseAuth.getCurrentUser() == null) {
-                        FirebaseUtil.signIn();
+                        FirebaseUtil.signIn(callerActivity);
                     } else {
                         String userId = firebaseAuth.getCurrentUser().getUid();
                         databaseReference = firebaseDatabase.getReference().child(userId);
                     }
-                    Toast.makeText(callerActivity.getBaseContext(), "Welcome Back!",
-                            Toast.LENGTH_LONG).show();
                 }
             };
         }
     }
 
-    private static void signIn() {
+    private static void signIn(Activity caller) {
         List<AuthUI.IdpConfig> providers = Arrays.asList(
                 new AuthUI.IdpConfig.EmailBuilder().build(),
                 new AuthUI.IdpConfig.GoogleBuilder().build());

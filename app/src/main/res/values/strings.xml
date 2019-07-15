@@ -18,7 +18,69 @@
     <string name="click_to_set_the_date">Click to set the date</string>
     <string name="add_experience">Add Experience</string>
     <string name="experiences">Experiences</string>
+    <string name="updatedetails">Update Details</string>
+    <string name="institutename">Institute Name</string>
+    <string name="fieldofstudy">Field Of Study</string>
+    <string name="name">NAME</string>
+    <string name="gender">GENDER</string>
+    <string name="dob">DOB</string>
+    <string name="email">EMAIL</string>
+    <string name="aadharnumber">Aadhar Number</string>
+    <string name="maritialstatus">MARITIAL STATUS</string>
+    <string name="hometown">Home Town</string>
+    <string name="pincode">Pincode</string>
+    <string name="permanentaddress">Permanent Adddress</string>
+    <string name="skillName">Skill Name</string>
+    <string name="addSkill">ADD SKILL</string>
+    <string name="addInternship">ADD INTERNSHIP</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="proficiency">PROFICIENCY LEVEL</string>
+    <string name="basic">BASIC</string>
+    <string name="medium">MEDIUM</string>
+    <string name="expert">EXPERT</string>
+
+    <string-array name="skillsList">
+        <item>@string/proficiency</item>
+        <item>@string/basic</item>
+        <item>@string/medium</item>
+        <item>@string/expert</item>
+    </string-array>
+
+    <string name="secEd">SECONDARY EDUCATION</string>
+    <string name="senSec">SENIOR SECONDARY</string>
+    <string name="bachelors">BACHELORS</string>
+    <string name="masters">MASTERS</string>
+    <string name="doctorate">DOCTRATE</string>
+
+    
+    <string-array name="educationType">
+        <item>@string/secEd</item>
+        <item>@string/senSec</item>
+        <item>@string/bachelors</item>
+        <item>@string/masters</item>
+        <item>@string/doctorate</item>
+    </string-array>
+
+    <string name="percentage">PERCENTAGE</string>
+    <string name="cgpa">CGPA</string>
+    <string name="sgpa">SGPA</string>
+
+    <string-array name="marksType">
+        <item>@string/percentage</item>
+        <item>@string/cgpa</item>
+        <item>@string/sgpa</item>
+    </string-array>
+
+    <string-array name="genderList">
+        <item>"MALE"</item>
+        <item>"FEMALE"</item>
+        <item>"OTHER"</item>
+    </string-array>
+
+    <string-array name="maritalList">
+        <item>"MARRIED"</item>
+        <item>"UNMARRIED"</item>
+        <item>"DIVORCED"</item>
+    </string-array>
+
 </resources>

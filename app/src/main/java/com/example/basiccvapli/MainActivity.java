@@ -1,7 +1,6 @@
 package com.example.basiccvapli;
 
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
@@ -9,7 +8,7 @@ import androidx.fragment.app.FragmentManager;
 import com.example.basiccvapli.firebaseUtils.FirebaseUtil;
 import com.google.firebase.FirebaseApp;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
 
     @Override
@@ -21,7 +20,7 @@ public class MainActivity extends AppCompatActivity{
 
         FragmentManager fragmentManager = getSupportFragmentManager();
 
-        if(savedInstanceState == null){
+        if (savedInstanceState == null) {
             fragmentManager.beginTransaction()
                     .add(R.id.fragment_container, new BasiccvFragment())
                     .commit();

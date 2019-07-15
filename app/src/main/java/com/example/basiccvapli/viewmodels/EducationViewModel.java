@@ -6,16 +6,15 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.basiccvapli.models.Experience;
+import com.example.basiccvapli.models.Education;
 import com.example.basiccvapli.repository.Repository;
 import com.google.firebase.database.DataSnapshot;
 
-public class ExperienceViewModel extends ViewModel {
+public class EducationViewModel extends ViewModel {
 
-    public MutableLiveData<String> companyName = new MutableLiveData<>();
-    public MutableLiveData<String> industry = new MutableLiveData<>();
-    public MutableLiveData<String> designation = new MutableLiveData<>();
-    public MutableLiveData<String> location = new MutableLiveData<>();
+    public MutableLiveData<String> instituteName = new MutableLiveData<>();
+    public MutableLiveData<String> marks = new MutableLiveData<>();
+    public MutableLiveData<String> fieldOfStudy = new MutableLiveData<>();
     public MutableLiveData<String> from = new MutableLiveData<>();
     public MutableLiveData<String> to = new MutableLiveData<>();
 
@@ -24,15 +23,16 @@ public class ExperienceViewModel extends ViewModel {
     public void init(Context context){
         repository = new Repository(context);
     }
-    public void save(Experience experience){
-        repository.saveExperience(experience);
+
+    public void save(Education education){
+        repository.saveEducation(education);
     }
 
     public LiveData<DataSnapshot> getDetails(){
         return repository.getData();
     }
 
-    public void update(Experience experience, String key) {
-        repository.updateExperience(experience, key);
+    public void update(Education education, String key) {
+        repository.updateEducation(education, key);
     }
 }

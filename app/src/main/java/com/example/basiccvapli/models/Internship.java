@@ -2,21 +2,29 @@ package com.example.basiccvapli.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-public class Experience implements Parcelable {
 
-    private String eid;
+public class Internship implements Parcelable {
+
+    public String getIid() {
+        return iid;
+    }
+
+    public void setIid(String iid) {
+        this.iid = iid;
+    }
+
+    private String iid;
     private String companyName;
-    private String industry;
-    private String designation;
+    private String industry;private String designation;
     private String location;
     private String fromDate;
     private String toDate;
 
-    public Experience() {
+    public Internship() {
     }
 
-    protected Experience(Parcel in) {
-        eid = in.readString();
+    protected Internship(Parcel in) {
+        iid = in.readString();
         companyName = in.readString();
         industry = in.readString();
         designation = in.readString();
@@ -25,25 +33,17 @@ public class Experience implements Parcelable {
         toDate = in.readString();
     }
 
-    public static final Creator<Experience> CREATOR = new Creator<Experience>() {
+    public static final Creator<Internship> CREATOR = new Creator<Internship>() {
         @Override
-        public Experience createFromParcel(Parcel in) {
-            return new Experience(in);
+        public Internship createFromParcel(Parcel in) {
+            return new Internship(in);
         }
 
         @Override
-        public Experience[] newArray(int size) {
-            return new Experience[size];
+        public Internship[] newArray(int size) {
+            return new Internship[size];
         }
     };
-
-    public String getEid() {
-        return eid;
-    }
-
-    public void setEid(String eid) {
-        this.eid = eid;
-    }
 
     public String getCompanyName() {
         return companyName;
@@ -100,7 +100,7 @@ public class Experience implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(eid);
+        dest.writeString(iid);
         dest.writeString(companyName);
         dest.writeString(industry);
         dest.writeString(designation);
