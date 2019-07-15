@@ -28,6 +28,7 @@ import com.example.basiccvapli.models.Internship;
 import com.example.basiccvapli.models.Skill;
 import com.example.basiccvapli.viewmodels.EducationViewModel;
 import com.example.basiccvapli.viewmodels.ExperienceViewModel;
+import com.example.basiccvapli.viewmodels.InternshipViewModel;
 import com.example.basiccvapli.viewmodels.SkillViewModel;
 import com.google.firebase.database.DataSnapshot;
 
@@ -86,8 +87,12 @@ public class ListFragment extends Fragment {
                     tag = SkillsFragment.class.getSimpleName();
                     adapter = new SkillAdapter(null);
                 } else if (type.equals(getString(R.string.Internships))) {
+                    viewModel = ViewModelProviders.of(this).get(InternshipViewModel.class);
+                    ((InternshipViewModel) viewModel).init(getContext());
+                    liveData = ((InternshipViewModel) viewModel).getDetails();
                     fragment = new InternshipsFragment();
                     tag = InternshipsFragment.class.getSimpleName();
+                    adapter = new InternshipAdapter(null);
                 }
             }
         }
@@ -119,38 +124,48 @@ public class ListFragment extends Fragment {
                     if (dataSnapshot != null && dataSnapshot.child(type).hasChildren()) {
                         for (DataSnapshot ds : dataSnapshot.child(type).getChildren()) {
                             if (type.equals(getString(R.string.experience))) {
-                                setExperienceAdapter(ds, experiences);
+                                final Experience experience = ds.getValue(Experience.class);
+                                experience.setEid(ds.getKey());
+                                experiences.add(experience);
                             } else if (type.equals(getString(R.string.skills))) {
-                                setSkillAdapter(ds, skills);
+                                final Skill skill = ds.getValue(Skill.class);
+                                skill.setSid(ds.getKey());
+                                skills.add(skill);
                             } else if (type.equals(getString(R.string.Internships))) {
-                                setInternshipAdapter(ds, internships);
+                                final Internship internship = ds.getValue(Internship.class);
+                                internship.setIid(ds.getKey());
+                                internships.add(internship);
                             } else if (type.equals(getString(R.string.education))) {
-                                setEducationAdapter(ds, educations);
+                                final Education education = ds.getValue(Education.class);
+                                education.setEdid(ds.getKey());
+                                educations.add(education);
                             }
                         }
-                        recyclerView.setAdapter(adapter);
                         if (type.equals(getString(R.string.experience))) {
+                            setExperienceAdapter(experiences);
                             ((ExperienceAdapter) adapter).submitList(experiences);
                         } else if (type.equals(getString(R.string.skills))) {
+                            setSkillAdapter(skills);
                             ((SkillAdapter) adapter).submitList(skills);
                         } else if (type.equals(getString(R.string.Internships))) {
+                            setInternshipAdapter(internships);
                             ((InternshipAdapter) adapter).submitList(internships);
                         } else if (type.equals(getString(R.string.education))) {
+                            setEducationAdapter(educations);
                             ((EducationAdapter) adapter).submitList(educations);
                         }
+                        recyclerView.setAdapter(adapter);
                     }
                 }
             });
         }
     }
 
-    private void setSkillAdapter(DataSnapshot ds, ArrayList<Skill> skills) {
-        final Skill skill = ds.getValue(Skill.class);
-        skill.setSid(ds.getKey());
-        skills.add(skill);
+    private void setSkillAdapter(final ArrayList<Skill> skills) {
         adapter = new SkillAdapter(new SkillAdapter.OnItemClickListener() {
             @Override
             public void OnItemClick(int position) {
+                Skill skill = skills.get(position);
                 Bundle bundle = new Bundle();
                 bundle.putParcelable(getString(R.string.skills), skill);
                 fragment.setArguments(bundle);
@@ -162,13 +177,11 @@ public class ListFragment extends Fragment {
         });
     }
 
-    public void setExperienceAdapter(DataSnapshot ds, ArrayList<Experience> experiences) {
-        final Experience experience = ds.getValue(Experience.class);
-        experience.setEid(ds.getKey());
-        experiences.add(experience);
+    private void setExperienceAdapter(final ArrayList<Experience> experiences) {
         adapter = new ExperienceAdapter(new ExperienceAdapter.OnItemClickListener() {
             @Override
             public void OnItemClick(int position) {
+                Experience experience = experiences.get(position);
                 Bundle bundle = new Bundle();
                 bundle.putParcelable(getString(R.string.experience), experience);
                 fragment.setArguments(bundle);
@@ -180,15 +193,13 @@ public class ListFragment extends Fragment {
         });
     }
 
-    public void setInternshipAdapter(DataSnapshot ds, ArrayList<Internship> internships) {
-        final Internship internship = ds.getValue(Internship.class);
-        internship.setIid(ds.getKey());
-        internships.add(internship);
-        adapter = new ExperienceAdapter(new ExperienceAdapter.OnItemClickListener() {
+    private void setInternshipAdapter(final ArrayList<Internship> internships) {
+        adapter = new InternshipAdapter(new InternshipAdapter.OnItemClickListener() {
             @Override
             public void OnItemClick(int position) {
+                Internship internship = internships.get(position);
                 Bundle bundle = new Bundle();
-                bundle.putParcelable(getString(R.string.experience), internship);
+                bundle.putParcelable(getString(R.string.Internships), internship);
                 fragment.setArguments(bundle);
                 fragmentManager.beginTransaction()
                         .replace(R.id.fragment_container, fragment)
@@ -198,13 +209,11 @@ public class ListFragment extends Fragment {
         });
     }
 
-    public void setEducationAdapter(DataSnapshot ds, ArrayList<Education> educations){
-        final Education education = ds.getValue(Education.class);
-        education.setEdid(ds.getKey());
-        educations.add(education);
+    private void setEducationAdapter(final ArrayList<Education> educations){
         adapter = new EducationAdapter(new EducationAdapter.OnItemClickListener() {
             @Override
             public void OnItemClick(int position) {
+                Education education = educations.get(position);
                 Bundle bundle = new Bundle();
                 bundle.putParcelable(getString(R.string.education), education);
                 fragment.setArguments(bundle);

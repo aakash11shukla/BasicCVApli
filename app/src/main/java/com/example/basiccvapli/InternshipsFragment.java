@@ -61,7 +61,7 @@ public class InternshipsFragment extends Fragment {
                 viewModel.from.setValue(internship.getFromDate());
                 viewModel.to.setValue(internship.getToDate());
                 key = internship.getIid();
-                ((Button)Objects.requireNonNull(getView()).findViewById(R.id.addExperienceButton)).setText(getString(R.string.updatedetails));
+                ((Button)Objects.requireNonNull(getView()).findViewById(R.id.addInternshipButton)).setText(getString(R.string.updatedetails));
             }
         }
 

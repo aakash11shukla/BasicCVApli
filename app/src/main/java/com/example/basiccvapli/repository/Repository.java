@@ -17,16 +17,16 @@ import com.google.firebase.database.DataSnapshot;
 public class Repository {
 
     private LiveData<DataSnapshot> dataSnapshot = null;
-    private final FirebaseQueryLiveData experienceLiveData;
+    private final FirebaseQueryLiveData liveData;
     private Context context;
 
     public Repository(Context context) {
         this.context = context;
-        experienceLiveData = new FirebaseQueryLiveData(FirebaseUtil.databaseReference);
+        liveData = new FirebaseQueryLiveData(FirebaseUtil.databaseReference);
     }
 
     public LiveData<DataSnapshot> getData(){
-        return experienceLiveData;
+        return liveData;
     }
 
     public void saveExperience(Experience experience) {

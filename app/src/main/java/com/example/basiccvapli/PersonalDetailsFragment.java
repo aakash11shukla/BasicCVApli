@@ -1,8 +1,10 @@
 package com.example.basiccvapli;
 
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,10 +21,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -41,12 +43,10 @@ import static android.app.Activity.RESULT_OK;
 public class PersonalDetailsFragment extends Fragment {
 
     private static final int GALLERY = 143;
+    private static final int REQUEST_PERM_STORAGE = 165;
     private PersonalDetailsViewModel viewModel;
     private FragmentManager fragmentManager;
-
     private ImageView imageViewProfileImage;
-
-    private Uri filepath;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -75,19 +75,21 @@ public class PersonalDetailsFragment extends Fragment {
         viewModel.getDetails().observe(this, new Observer<DataSnapshot>() {
             @Override
             public void onChanged(DataSnapshot dataSnapshot) {
-                if(dataSnapshot != null){
+                if (dataSnapshot != null) {
                     PersonalDetails personalDetails = dataSnapshot.child(getString(R.string.personalDetails)).getValue(PersonalDetails.class);
-                    viewModel.filepath.setValue(personalDetails.getProfileImage());
-                    viewModel.permanentAddress.setValue(personalDetails.getPermanentAddress());
-                    viewModel.pinCode.setValue(personalDetails.getPincode());
-                    viewModel.homeTown.setValue(personalDetails.getHometown());
-                    viewModel.email.setValue(personalDetails.getEmail());
-                    viewModel.aadharNo.setValue(personalDetails.getAadharNumber());
-                    viewModel.name.setValue(personalDetails.getName());
-                    viewModel.maritalStatus.setValue(personalDetails.getMaritialStatus());
-                    viewModel.dob.setValue(personalDetails.getDateOfBirth());
-                    viewModel.gender.setValue(personalDetails.getGender());
-                    setProfileImage(viewModel.filepath);
+                    if (personalDetails != null) {
+                        viewModel.filepath.setValue(personalDetails.getProfileImage());
+                        viewModel.permanentAddress.setValue(personalDetails.getPermanentAddress());
+                        viewModel.pinCode.setValue(personalDetails.getPincode());
+                        viewModel.homeTown.setValue(personalDetails.getHometown());
+                        viewModel.email.setValue(personalDetails.getEmail());
+                        viewModel.aadharNo.setValue(personalDetails.getAadharNumber());
+                        viewModel.name.setValue(personalDetails.getName());
+                        viewModel.maritalStatus.setValue(personalDetails.getMaritialStatus());
+                        viewModel.dob.setValue(personalDetails.getDateOfBirth());
+                        viewModel.gender.setValue(personalDetails.getGender());
+                        Toast.makeText(getContext(), "GG", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -117,7 +119,7 @@ public class PersonalDetailsFragment extends Fragment {
                         || maritialStatus.isEmpty() || gender.isEmpty() || dob == null || dob.isEmpty()) {
 
                     Toast.makeText(getContext(), "PLEASE FILL ALL THE CEREDENTIALS", Toast.LENGTH_SHORT).show();
-                } else if (filepath == null) {
+                } else if (viewModel.filepath == null) {
                     Toast.makeText(getContext(), "PLEASE ADD A PROFILE IMAGE", Toast.LENGTH_SHORT).show();
                 } else {
                     PersonalDetails personalDetails = new PersonalDetails();
@@ -130,24 +132,42 @@ public class PersonalDetailsFragment extends Fragment {
                     personalDetails.setMaritialStatus(maritialStatus);
                     personalDetails.setPermanentAddress(address);
                     personalDetails.setPincode(pincode);
-                    personalDetails.setProfileImage(filepath.toString());
+                    personalDetails.setProfileImage(viewModel.filepath.getValue());
                     viewModel.save(personalDetails);
                     Toast.makeText(getContext(), "DETAILS UPDATED SUCCESSFULLY", Toast.LENGTH_SHORT).show();
                     fragmentManager.popBackStack();
                 }
             }
         });
+
+        viewModel.filepath.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                setProfileImage();
+                Toast.makeText(getContext(), "IMAGE SET", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    private void setProfileImage(MutableLiveData<String> filepath) {
-        if(viewModel != null && viewModel.filepath != null && viewModel.filepath.getValue() != null && !viewModel.filepath.getValue().isEmpty()) {
-            try {
-                imageViewProfileImage.setImageBitmap(MediaStore.Images.Media.getBitmap(Objects.requireNonNull(getActivity()).getContentResolver(), Uri.parse(viewModel.filepath.getValue())));
-            } catch (IOException e) {
-                e.printStackTrace();
-                imageViewProfileImage.setImageDrawable(Objects.requireNonNull(getContext()).getDrawable(R.drawable.profile));
+    private void setProfileImage() {
+        if (viewModel != null && viewModel.filepath != null && viewModel.filepath.getValue() != null && !viewModel.filepath.getValue().isEmpty()) {
+            if (ActivityCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERM_STORAGE);
+            } else {
+                setBitmap();
             }
-            ;
+        }
+    }
+
+    private void setBitmap() {
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(Objects.requireNonNull(getActivity()).getContentResolver(), Uri.parse(viewModel.filepath.getValue()));
+            if (bitmap != null) {
+                imageViewProfileImage.setImageBitmap(bitmap);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            imageViewProfileImage.setImageDrawable(Objects.requireNonNull(getContext()).getDrawable(R.drawable.profile));
         }
     }
 
@@ -179,7 +199,6 @@ public class PersonalDetailsFragment extends Fragment {
     }
 
     private void chooseImage() {
-
         Intent i = new Intent(
                 Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(i, GALLERY);
@@ -188,17 +207,21 @@ public class PersonalDetailsFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == GALLERY && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            filepath = data.getData();
-            viewModel.filepath.setValue(filepath.toString());
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(Objects.requireNonNull(getActivity()).getContentResolver(), filepath);
-                imageViewProfileImage.setImageBitmap(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
+        if (requestCode == GALLERY) {
+            if (resultCode == RESULT_OK && data != null && data.getData() != null) {
+                Uri filepath = data.getData();
+                viewModel.filepath.setValue(filepath.toString());
             }
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_PERM_STORAGE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                setBitmap();
+            }
+        }
+    }
 }

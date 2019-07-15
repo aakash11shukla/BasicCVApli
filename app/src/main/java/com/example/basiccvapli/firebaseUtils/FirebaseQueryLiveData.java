@@ -36,11 +36,10 @@ public class FirebaseQueryLiveData extends LiveData<DataSnapshot> {
     private class MyValueEventListener implements ValueEventListener {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            if(dataSnapshot.getValue()!=null)
+            if(getValue() == null)
                 setValue(dataSnapshot);
-            else {
-                setValue(null);
-            }
+
+            setValue(null);
         }
 
         @Override
