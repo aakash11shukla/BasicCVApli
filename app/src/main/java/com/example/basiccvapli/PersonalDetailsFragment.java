@@ -61,16 +61,8 @@ public class PersonalDetailsFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        showDatePickerDialog();
-
-        Button updatePersonalInfo = Objects.requireNonNull(getView()).findViewById(R.id.upadate_button);
-        final Spinner genderDropdown = getView().findViewById(R.id.genderSpinnerDropdown);
-        final Spinner maritialSpinnerDropdown = getView().findViewById(R.id.maritialSpinnerDropdown);
-
-        ImageView editProfileImage = getView().findViewById(R.id.editprofile_image);
-        imageViewProfileImage = getView().findViewById(R.id.imageprofile_image);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         viewModel.getDetails().observe(this, new Observer<DataSnapshot>() {
             @Override
@@ -88,11 +80,23 @@ public class PersonalDetailsFragment extends Fragment {
                         viewModel.maritalStatus.setValue(personalDetails.getMaritialStatus());
                         viewModel.dob.setValue(personalDetails.getDateOfBirth());
                         viewModel.gender.setValue(personalDetails.getGender());
-                        Toast.makeText(getContext(), "GG", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
         });
+    }
+
+    @Override
+    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        showDatePickerDialog();
+
+        Button updatePersonalInfo = Objects.requireNonNull(getView()).findViewById(R.id.upadate_button);
+        final Spinner genderDropdown = getView().findViewById(R.id.genderSpinnerDropdown);
+        final Spinner maritialSpinnerDropdown = getView().findViewById(R.id.maritialSpinnerDropdown);
+
+        ImageView editProfileImage = getView().findViewById(R.id.editprofile_image);
+        imageViewProfileImage = getView().findViewById(R.id.imageprofile_image);
 
         editProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,19 +147,19 @@ public class PersonalDetailsFragment extends Fragment {
         viewModel.filepath.observe(this, new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                setProfileImage();
-                Toast.makeText(getContext(), "IMAGE SET", Toast.LENGTH_SHORT).show();
+                if(!s.isEmpty()) {
+                    setProfileImage();
+                    Toast.makeText(getContext(), "IMAGE SET", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
 
     private void setProfileImage() {
-        if (viewModel != null && viewModel.filepath != null && viewModel.filepath.getValue() != null && !viewModel.filepath.getValue().isEmpty()) {
-            if (ActivityCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERM_STORAGE);
-            } else {
-                setBitmap();
-            }
+        if (ActivityCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERM_STORAGE);
+        } else {
+            setBitmap();
         }
     }
 
@@ -167,7 +171,6 @@ public class PersonalDetailsFragment extends Fragment {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            imageViewProfileImage.setImageDrawable(Objects.requireNonNull(getContext()).getDrawable(R.drawable.profile));
         }
     }
 
