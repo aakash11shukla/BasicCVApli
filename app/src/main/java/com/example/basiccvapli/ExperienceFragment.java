@@ -37,7 +37,7 @@ public class ExperienceFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         FragmentExperienceBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_experience, container, false);
         viewModel = ViewModelProviders.of(this).get(ExperienceViewModel.class);
-        viewModel.init(getContext());
+        viewModel.init(getActivity());
         fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
         binding.setExperienceviewmodel(viewModel);
         binding.setLifecycleOwner(this);

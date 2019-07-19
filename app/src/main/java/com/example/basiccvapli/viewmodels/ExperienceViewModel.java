@@ -1,5 +1,6 @@
 package com.example.basiccvapli.viewmodels;
 
+import android.app.Activity;
 import android.content.Context;
 
 import androidx.lifecycle.LiveData;
@@ -21,8 +22,8 @@ public class ExperienceViewModel extends ViewModel {
 
     private Repository repository;
 
-    public void init(Context context){
-        repository = new Repository(context);
+    public void init(Activity activity){
+        repository = new Repository(activity);
     }
     public void save(Experience experience){
         repository.saveExperience(experience);

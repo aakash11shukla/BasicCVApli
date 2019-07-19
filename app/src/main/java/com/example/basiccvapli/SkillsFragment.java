@@ -37,7 +37,7 @@ public class SkillsFragment extends Fragment {
         binding.setLifecycleOwner(this);
         fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
         viewModel = ViewModelProviders.of(this).get(SkillViewModel.class);
-        viewModel.init(getContext());
+        viewModel.init(getActivity());
         binding.setSkillviewmodel(viewModel);
         return binding.getRoot();
     }

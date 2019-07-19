@@ -68,27 +68,27 @@ public class ListFragment extends Fragment {
                 ViewModel viewModel;
                 if (type.equals(getString(R.string.experience))) {
                     viewModel = ViewModelProviders.of(this).get(ExperienceViewModel.class);
-                    ((ExperienceViewModel) viewModel).init(getContext());
+                    ((ExperienceViewModel) viewModel).init(getActivity());
                     liveData = ((ExperienceViewModel) viewModel).getDetails();
                     fragment = new ExperienceFragment();
                     tag = ExperienceFragment.class.getSimpleName();
                     adapter = new ExperienceAdapter(null);
                 } else if (type.equals(getString(R.string.education))) {
                     viewModel = ViewModelProviders.of(this).get(EducationViewModel.class);
-                    ((EducationViewModel) viewModel).init(getContext());
+                    ((EducationViewModel) viewModel).init(getActivity());
                     liveData = ((EducationViewModel) viewModel).getDetails();
                     fragment = new EducationFragment();
                     tag = EducationFragment.class.getSimpleName();
                 } else if (type.equals(getString(R.string.skills))) {
                     viewModel = ViewModelProviders.of(this).get(SkillViewModel.class);
-                    ((SkillViewModel) viewModel).init(getContext());
+                    ((SkillViewModel) viewModel).init(getActivity());
                     liveData = ((SkillViewModel) viewModel).getDetails();
                     fragment = new SkillsFragment();
                     tag = SkillsFragment.class.getSimpleName();
                     adapter = new SkillAdapter(null);
                 } else if (type.equals(getString(R.string.Internships))) {
                     viewModel = ViewModelProviders.of(this).get(InternshipViewModel.class);
-                    ((InternshipViewModel) viewModel).init(getContext());
+                    ((InternshipViewModel) viewModel).init(getActivity());
                     liveData = ((InternshipViewModel) viewModel).getDetails();
                     fragment = new InternshipsFragment();
                     tag = InternshipsFragment.class.getSimpleName();

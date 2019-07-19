@@ -1,5 +1,6 @@
 package com.example.basiccvapli.repository;
 
+import android.app.Activity;
 import android.content.Context;
 
 import androidx.lifecycle.LiveData;
@@ -18,10 +19,10 @@ public class Repository {
 
     private LiveData<DataSnapshot> dataSnapshot = null;
     private final FirebaseQueryLiveData liveData;
-    private Context context;
+    private Activity activity;
 
-    public Repository(Context context) {
-        this.context = context;
+    public Repository(Activity activity) {
+        this.activity = activity;
         liveData = new FirebaseQueryLiveData(FirebaseUtil.databaseReference);
     }
 
@@ -30,38 +31,38 @@ public class Repository {
     }
 
     public void saveExperience(Experience experience) {
-        FirebaseUtil.databaseReference.child(context.getString(R.string.experience)).push().setValue(experience);
+        FirebaseUtil.databaseReference.collection(activity.getString(R.string.experience)).add(experience);
     }
 
     public void saveSkill(Skill skill){
-        FirebaseUtil.databaseReference.child(context.getString(R.string.skills)).push().setValue(skill);
+        FirebaseUtil.databaseReference.collection(activity.getString(R.string.skills)).add(skill);
     }
 
     public void saveEducation(Education education) {
-        FirebaseUtil.databaseReference.child(context.getString(R.string.education)).push().setValue(education);
+        FirebaseUtil.databaseReference.collection(activity.getString(R.string.education)).add(education);
     }
 
     public void saveInternship(Internship internship) {
-        FirebaseUtil.databaseReference.child(context.getString(R.string.Internships)).push().setValue(internship);
+        FirebaseUtil.databaseReference.collection(activity.getString(R.string.Internships)).add(internship);
     }
 
     public void savePersonalDetails(PersonalDetails personalDetails) {
-        FirebaseUtil.databaseReference.child(context.getString(R.string.personalDetails)).setValue(personalDetails);
+        FirebaseUtil.databaseReference.collection(activity.getString(R.string.personalDetails)).add(personalDetails);
     }
 
     public void updateExperience(Experience experience, String key) {
-        FirebaseUtil.databaseReference.child(context.getString(R.string.experience)).child(key).setValue(experience);
+        FirebaseUtil.databaseReference.collection(activity.getString(R.string.experience)).document(key).set(experience);
     }
 
     public void updateSkill(Skill skill, String key) {
-        FirebaseUtil.databaseReference.child(context.getString(R.string.skills)).child(key).setValue(skill);
+        FirebaseUtil.databaseReference.collection(activity.getString(R.string.skills)).document(key).set(skill);
     }
 
     public void updateInternship(Internship internship, String key) {
-        FirebaseUtil.databaseReference.child(context.getString(R.string.Internships)).child(key).setValue(internship);
+        FirebaseUtil.databaseReference.collection(activity.getString(R.string.Internships)).document(key).set(internship);
     }
 
     public void updateEducation(Education education, String key) {
-        FirebaseUtil.databaseReference.child(context.getString(R.string.education)).child(key).setValue(education);
+        FirebaseUtil.databaseReference.collection(activity.getString(R.string.education)).document(key).set(key);
     }
 }

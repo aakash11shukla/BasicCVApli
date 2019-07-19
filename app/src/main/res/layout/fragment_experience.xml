@@ -45,21 +45,6 @@
                     app:hintAnimationEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/industry_edittext"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/industry"
-                        android:text="@={experienceviewmodel.industry}"
-                        android:textSize="18sp" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:hintAnimationEnabled="true">
-
-                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/designation_edittext"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -133,6 +118,22 @@
                         android:textSize="18sp" />
 
                 </LinearLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:hintAnimationEnabled="true">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/industry_edittext"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/industry"
+                        android:text="@={experienceviewmodel.industry}"
+                        android:textSize="18sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
 
             </LinearLayout>
         </ScrollView>

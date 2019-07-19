@@ -41,7 +41,7 @@ public class EducationFragment extends Fragment {
         binding.setLifecycleOwner(this);
         fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
         viewModel = ViewModelProviders.of(this).get(EducationViewModel.class);
-        viewModel.init(getContext());
+        viewModel.init(getActivity());
         binding.setEducationviewmodel(viewModel);
         return binding.getRoot();
     }

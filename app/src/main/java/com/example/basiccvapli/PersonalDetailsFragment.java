@@ -52,7 +52,7 @@ public class PersonalDetailsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         viewModel = ViewModelProviders.of(this).get(PersonalDetailsViewModel.class);
-        viewModel.init(getContext());
+        viewModel.init(getActivity());
         FragmentPersonalDetailsBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_personal_details, container, false);
         binding.setPersonaldetailsviewmodel(viewModel);
         binding.setLifecycleOwner(this);

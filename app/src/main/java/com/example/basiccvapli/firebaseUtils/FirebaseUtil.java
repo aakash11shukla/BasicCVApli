@@ -1,63 +1,59 @@
 package com.example.basiccvapli.firebaseUtils;
 
 import android.app.Activity;
-import android.widget.Toast;
+import android.content.Intent;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.MutableLiveData;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
-import com.example.basiccvapli.models.Experience;
-import com.firebase.ui.auth.AuthUI;
-import com.google.firebase.FirebaseApp;
+import com.example.basiccvapli.R;
+import com.example.basiccvapli.SignInFragment;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.Arrays;
-import java.util.List;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class FirebaseUtil {
-    private static final int RC_SIGN_IN = 123;
-    private static FirebaseDatabase firebaseDatabase;
-    public static DatabaseReference databaseReference;
+
+    private FirebaseFirestore firebaseDatabase;
+    public static DocumentReference databaseReference;
     private static FirebaseAuth firebaseAuth;
     private static FirebaseAuth.AuthStateListener authStateListener;
     private static FirebaseUtil firebaseUtil;
+    private FragmentManager fragmentManager;
 
-    private FirebaseUtil() {
+    public static synchronized FirebaseUtil getInstance() {
+        if(firebaseUtil == null){
+            firebaseUtil = new FirebaseUtil();
+        }
+        return firebaseUtil;
     }
 
-    public static void openFbReference(final Activity callerActivity) {
-        if (firebaseUtil == null) {
-            firebaseUtil = new FirebaseUtil();
-            firebaseDatabase = FirebaseDatabase.getInstance();
-            firebaseAuth = FirebaseAuth.getInstance();
-            authStateListener = new FirebaseAuth.AuthStateListener() {
-                @Override
-                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                    if (firebaseAuth.getCurrentUser() == null) {
-                        FirebaseUtil.signIn(callerActivity);
-                    } else {
-                        String userId = firebaseAuth.getCurrentUser().getUid();
-                        databaseReference = firebaseDatabase.getReference().child(userId);
+    public void openFbReference(FragmentManager fragmentManager) {
+        firebaseDatabase = FirebaseFirestore.getInstance();
+        this.fragmentManager = fragmentManager;
+        firebaseAuth = FirebaseAuth.getInstance();
+        authStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if (firebaseAuth.getCurrentUser() == null) {
+                    signIn();
+                } else {
+                    String email = firebaseAuth.getCurrentUser().getEmail();
+                    if (email != null) {
+                        databaseReference = firebaseDatabase.collection("candidates").document(email);
                     }
                 }
-            };
-        }
+            }
+        };
     }
 
-    private static void signIn(Activity caller) {
-        List<AuthUI.IdpConfig> providers = Arrays.asList(
-                new AuthUI.IdpConfig.EmailBuilder().build(),
-                new AuthUI.IdpConfig.GoogleBuilder().build());
-
-        caller.startActivityForResult(
-                AuthUI.getInstance()
-                        .createSignInIntentBuilder()
-                        .setAvailableProviders(providers)
-                        .build(),
-                RC_SIGN_IN);
+    private void signIn() {
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, new SignInFragment());
+        fragmentTransaction.addToBackStack(SignInFragment.class.getSimpleName());
+        fragmentTransaction.commit();
     }
 
     public static void attachListener() {

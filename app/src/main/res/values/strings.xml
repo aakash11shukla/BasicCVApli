@@ -52,7 +52,7 @@
     <string name="masters">MASTERS</string>
     <string name="doctorate">DOCTRATE</string>
 
-    
+
     <string-array name="educationType">
         <item>@string/secEd</item>
         <item>@string/senSec</item>
@@ -64,6 +64,8 @@
     <string name="percentage">PERCENTAGE</string>
     <string name="cgpa">CGPA</string>
     <string name="sgpa">SGPA</string>
+    <string name="create_account">Create account</string>
+    <string name="sign_out">Sign out</string>
 
     <string-array name="marksType">
         <item>@string/percentage</item>
@@ -82,5 +84,19 @@
         <item>"UNMARRIED"</item>
         <item>"DIVORCED"</item>
     </string-array>
+
+    <string name="signin">SignIn</string>
+    <string name="login">Login</string>
+    <string name="logo">Logo</string>
+    <string name="apli_ai">Apli AI</string>
+    <string name="enter_phone_number_with_code_for_otp">Enter phone number with country code.</string>
+    <string name="submit">Submit</string>
+    <string name="submit_code">Verify code</string>
+    <string name="enter_the_code_for_verification">Enter the code for verification.</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="detailsCompletedKey">DetailsCompletedKey</string>
+    <string name="full_name">Full name</string>
 
 </resources>
