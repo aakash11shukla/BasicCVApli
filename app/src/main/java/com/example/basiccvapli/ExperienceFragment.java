@@ -50,9 +50,9 @@ public class ExperienceFragment extends Fragment {
 
         showDatePickerDialog();
 
-        if(getArguments() != null){
+        if (getArguments() != null) {
             Experience experience = getArguments().getParcelable(getString(R.string.experience));
-            if(experience != null) {
+            if (experience != null) {
                 viewModel.companyName.setValue(experience.getCompanyName());
                 viewModel.industry.setValue(experience.getIndustry());
                 viewModel.designation.setValue(experience.getDesignation());
@@ -60,7 +60,7 @@ public class ExperienceFragment extends Fragment {
                 viewModel.from.setValue(experience.getFromDate());
                 viewModel.to.setValue(experience.getToDate());
                 key = experience.getEid();
-                ((Button)Objects.requireNonNull(getView()).findViewById(R.id.addExperienceButton)).setText(getString(R.string.updatedetails));
+                ((Button) Objects.requireNonNull(getView()).findViewById(R.id.addExperienceButton)).setText(getString(R.string.updatedetails));
             }
         }
 
@@ -93,11 +93,11 @@ public class ExperienceFragment extends Fragment {
                     experience.setLocation(location);
                     experience.setFromDate(fromDate);
                     experience.setToDate(toDate);
-                    if(key == null) {
+                    if (key == null) {
                         viewModel.save(experience);
                         Toast.makeText(getContext(), "EXPERIENCE ADDED SUCCESSFULLY", Toast.LENGTH_SHORT).show();
-                    }else{
-                       viewModel.update(experience, key);
+                    } else {
+                        viewModel.update(experience, key);
                         Toast.makeText(getContext(), "EXPERIENCE UPDATED SUCCESSFULLY", Toast.LENGTH_SHORT).show();
                     }
                     fragmentManager.popBackStack();

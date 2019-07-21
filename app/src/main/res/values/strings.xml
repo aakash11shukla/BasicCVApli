@@ -85,7 +85,7 @@
         <item>"DIVORCED"</item>
     </string-array>
 
-    <string name="signin">SignIn</string>
+    <string name="signup">SignUp</string>
     <string name="login">Login</string>
     <string name="logo">Logo</string>
     <string name="apli_ai">Apli AI</string>
@@ -94,9 +94,8 @@
     <string name="submit_code">Verify code</string>
     <string name="enter_the_code_for_verification">Enter the code for verification.</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="detailsCompletedKey">DetailsCompletedKey</string>
     <string name="full_name">Full name</string>
+    <string name="password">Password</string>
 
 </resources>

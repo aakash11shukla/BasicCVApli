@@ -51,9 +51,9 @@ public class InternshipsFragment extends Fragment {
 
         showDatePickerDialog();
 
-        if(getArguments() != null){
+        if (getArguments() != null) {
             Internship internship = getArguments().getParcelable(getString(R.string.Internships));
-            if(internship != null) {
+            if (internship != null) {
                 viewModel.companyName.setValue(internship.getCompanyName());
                 viewModel.industry.setValue(internship.getIndustry());
                 viewModel.designation.setValue(internship.getDesignation());
@@ -61,7 +61,7 @@ public class InternshipsFragment extends Fragment {
                 viewModel.from.setValue(internship.getFromDate());
                 viewModel.to.setValue(internship.getToDate());
                 key = internship.getIid();
-                ((Button)Objects.requireNonNull(getView()).findViewById(R.id.addInternshipButton)).setText(getString(R.string.updatedetails));
+                ((Button) Objects.requireNonNull(getView()).findViewById(R.id.addInternshipButton)).setText(getString(R.string.updatedetails));
             }
         }
 
@@ -94,10 +94,10 @@ public class InternshipsFragment extends Fragment {
                     internship.setLocation(location);
                     internship.setFromDate(fromDate);
                     internship.setToDate(toDate);
-                    if(key == null) {
+                    if (key == null) {
                         viewModel.save(internship);
                         Toast.makeText(getContext(), "EXPERIENCE ADDED SUCCESSFULLY", Toast.LENGTH_SHORT).show();
-                    }else{
+                    } else {
                         viewModel.update(internship, key);
                         Toast.makeText(getContext(), "EXPERIENCE UPDATED SUCCESSFULLY", Toast.LENGTH_SHORT).show();
                     }

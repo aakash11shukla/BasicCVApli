@@ -1,7 +1,6 @@
 package com.example.basiccvapli.viewmodels;
 
 import android.app.Activity;
-import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -22,14 +21,15 @@ public class ExperienceViewModel extends ViewModel {
 
     private Repository repository;
 
-    public void init(Activity activity){
+    public void init(Activity activity) {
         repository = new Repository(activity);
     }
-    public void save(Experience experience){
+
+    public void save(Experience experience) {
         repository.saveExperience(experience);
     }
 
-    public LiveData<DataSnapshot> getDetails(){
+    public LiveData<DataSnapshot> getDetails() {
         return repository.getData();
     }
 

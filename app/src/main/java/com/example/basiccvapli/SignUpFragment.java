@@ -2,6 +2,7 @@ package com.example.basiccvapli;
 
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,9 +12,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProviders;
 
+import com.example.basiccvapli.databinding.FragmentSignupBinding;
+import com.example.basiccvapli.viewmodels.SignUpViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
@@ -28,7 +32,7 @@ import com.google.firebase.auth.PhoneAuthProvider;
 
 import java.util.concurrent.TimeUnit;
 
-public class PhoneAuthenticationFragment extends Fragment {
+public class SignUpFragment extends Fragment {
 
     private TextInputLayout phone;
     private TextInputLayout otp;
@@ -41,6 +45,9 @@ public class PhoneAuthenticationFragment extends Fragment {
 
     private FirebaseAuth mAuth;
 
+    private FragmentSignupBinding binding;
+    private SignUpViewModel viewModel;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +56,9 @@ public class PhoneAuthenticationFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_phone_authentication, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_signup, container, false);
+        binding.setLifecycleOwner(this);
+        return binding.getRoot();
     }
 
     @Override
@@ -59,6 +68,9 @@ public class PhoneAuthenticationFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         mAuth.useAppLanguage();
 
+        viewModel = ViewModelProviders.of(this).get(SignUpViewModel.class);
+        binding.setSignupviewmodel(viewModel);
+
         phone = getView().findViewById(R.id.phone_number);
         otp = getView().findViewById(R.id.otp);
         submit = getView().findViewById(R.id.submit);
@@ -67,17 +79,19 @@ public class PhoneAuthenticationFragment extends Fragment {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String number = phone.getEditText().getText().toString();
+                String number = viewModel.phone_no.getValue();
                 if (otp.getVisibility() == View.GONE) {
-                    if (number.isEmpty()) {
+                    if (number == null || number.isEmpty()) {
                         phone.getEditText().setError("Cannot be empty");
                     } else {
                         if (!Patterns.PHONE.matcher(number).matches()) {
                             phone.getEditText().setError("Invalid format");
                         }
+                        viewModel.phone_no.setValue(null);
                         verifyPhoneNumber(number, mResendToken);
                     }
                 } else {
+                    Toast.makeText(getContext(), "SMS sent to phone number.", Toast.LENGTH_SHORT).show();
                     verifyPhoneNumber(number, mResendToken);
                 }
             }
@@ -86,8 +100,8 @@ public class PhoneAuthenticationFragment extends Fragment {
         code.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String vcode = otp.getEditText().getText().toString();
-                if (vcode.isEmpty()) {
+                String vcode = viewModel.code.getValue();
+                if (vcode == null || vcode.isEmpty()) {
                     return;
                 }
                 PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, vcode);
@@ -100,16 +114,14 @@ public class PhoneAuthenticationFragment extends Fragment {
             @Override
             public void onVerificationCompleted(PhoneAuthCredential credential) {
                 Toast.makeText(getContext(), "Code automatically verified", Toast.LENGTH_SHORT).show();
-                otp.getEditText().setText(credential.getSmsCode());
+                viewModel.code.setValue(credential.getSmsCode());
                 signInWithPhoneAuthCredential(credential);
             }
 
             @Override
             public void onVerificationFailed(FirebaseException e) {
-                if (e instanceof FirebaseAuthInvalidCredentialsException) {
-                    Toast.makeText(getContext(), "Invalid Request", Toast.LENGTH_LONG).show();
-                } else if (e instanceof FirebaseTooManyRequestsException) {
-                    Toast.makeText(getContext(), "SMS quota exceeded", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                if (e instanceof FirebaseTooManyRequestsException) {
                     getActivity().finish();
                 }
                 phone.setError("Verification Failed");
@@ -147,20 +159,22 @@ public class PhoneAuthenticationFragment extends Fragment {
         }
     }
 
-    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+    private void signInWithPhoneAuthCredential(final PhoneAuthCredential credential) {
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                             FirebaseUser user = task.getResult().getUser();
-                            if(user.getMetadata().getCreationTimestamp() != user.getMetadata().getLastSignInTimestamp()){
+                            if (user.getMetadata().getCreationTimestamp() != user.getMetadata().getLastSignInTimestamp()) {
                                 Toast.makeText(getContext(), "User already exist with this number.", Toast.LENGTH_LONG).show();
-                                fragmentManager.popBackStack();
                                 return;
                             }
-                            fragmentManager.popBackStack(SignInFragment.class.getSimpleName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                            user.updatePhoneNumber(credential);
+                            PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putBoolean(getString(R.string.detailsCompletedKey), false).apply();
+                            getActivity().getSupportFragmentManager().beginTransaction()
+                                    .replace(R.id.fragment_container, new DetailsFragment())
+                                    .commit();
                         } else {
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                                 Toast.makeText(getContext(), "Invalid verification code.", Toast.LENGTH_LONG).show();

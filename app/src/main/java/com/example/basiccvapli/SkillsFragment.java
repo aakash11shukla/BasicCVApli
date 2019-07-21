@@ -75,10 +75,10 @@ public class SkillsFragment extends Fragment {
                     Skill skill = new Skill();
                     skill.setSkillName(skillName);
                     skill.setSkillLevel(skillLevel);
-                    if(key == null) {
+                    if (key == null) {
                         viewModel.save(skill);
                         Toast.makeText(getContext(), "EXPERIENCE ADDED SUCCESSFULLY", Toast.LENGTH_SHORT).show();
-                    }else{
+                    } else {
                         viewModel.update(skill, key);
                         Toast.makeText(getContext(), "EXPERIENCE ADDED SUCCESSFULLY", Toast.LENGTH_SHORT).show();
                     }

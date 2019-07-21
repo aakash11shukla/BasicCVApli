@@ -1,7 +1,6 @@
 package com.example.basiccvapli.viewmodels;
 
 import android.app.Activity;
-import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -26,11 +25,11 @@ public class PersonalDetailsViewModel extends ViewModel {
 
     private Repository repository;
 
-    public void init(Activity activity){
+    public void init(Activity activity) {
         repository = new Repository(activity);
     }
 
-    public LiveData<DataSnapshot> getDetails(){
+    public LiveData<DataSnapshot> getDetails() {
         return repository.getData();
     }
 

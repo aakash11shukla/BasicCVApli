@@ -61,9 +61,9 @@ public class EducationFragment extends Fragment {
         perTypeSpinner.setAdapter(perTypeSpinnerAdapter);
         educationSpinner.setAdapter(educationSpinnerAdapter);
 
-        if(getArguments() != null){
+        if (getArguments() != null) {
             Education education = getArguments().getParcelable(getString(R.string.education));
-            if(education != null){
+            if (education != null) {
                 viewModel.instituteName.setValue(education.getInstituteName());
                 viewModel.fieldOfStudy.setValue((education.getFieldOfStudy()));
                 viewModel.from.setValue((education.getFromdate()));
@@ -102,10 +102,10 @@ public class EducationFragment extends Fragment {
                     education.setInstituteName(institute);
                     education.setTodate(toDate);
                     education.setPercentage(percentage);
-                    if(key == null){
+                    if (key == null) {
                         viewModel.save(education);
                         Toast.makeText(getContext(), "EDUCATION ADDED SUCCESSFULLY", Toast.LENGTH_SHORT).show();
-                    }else{
+                    } else {
                         viewModel.update(education, key);
                         Toast.makeText(getContext(), "EDUCATION UPDATED SUCCESSFULLY", Toast.LENGTH_SHORT).show();
                     }

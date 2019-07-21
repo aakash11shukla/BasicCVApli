@@ -147,7 +147,7 @@ public class PersonalDetailsFragment extends Fragment {
         viewModel.filepath.observe(this, new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                if(!s.isEmpty()) {
+                if (!s.isEmpty()) {
                     setProfileImage();
                     Toast.makeText(getContext(), "IMAGE SET", Toast.LENGTH_SHORT).show();
                 }

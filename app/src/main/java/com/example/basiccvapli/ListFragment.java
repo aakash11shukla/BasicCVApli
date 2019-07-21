@@ -209,7 +209,7 @@ public class ListFragment extends Fragment {
         });
     }
 
-    private void setEducationAdapter(final ArrayList<Education> educations){
+    private void setEducationAdapter(final ArrayList<Education> educations) {
         adapter = new EducationAdapter(new EducationAdapter.OnItemClickListener() {
             @Override
             public void OnItemClick(int position) {
