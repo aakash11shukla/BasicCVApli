@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.basiccvapli.databinding.FragmentLoginBinding;
@@ -21,17 +22,16 @@ import com.example.basiccvapli.firebaseUtils.FirebaseUtil;
 import com.example.basiccvapli.viewmodels.LoginViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Objects;
+
 public class LoginFragment extends Fragment {
 
     private EditText email;
-    private EditText password;
-    private Button submit;
-
-    private FirebaseAuth mAuth;
 
     private FragmentLoginBinding binding;
     private LoginViewModel viewModel;
@@ -52,11 +52,7 @@ public class LoginFragment extends Fragment {
         binding.setLoginviewmodel(viewModel);
 
         email = getView().findViewById(R.id.email);
-        password = getView().findViewById(R.id.password);
-        submit = getView().findViewById(R.id.submit);
-
-        mAuth = FirebaseAuth.getInstance();
-
+        Button submit = getView().findViewById(R.id.submit);
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,37 +77,16 @@ public class LoginFragment extends Fragment {
     }
 
     private void loginUser(final String userEmail, final String passwd) {
-
-        final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("candidates").document(userEmail).get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(userEmail, passwd)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot snapshot = task.getResult();
-                            if (snapshot != null) {
-                                if (snapshot.exists()) {
-                                    firebaseFirestore.collection("users").document(userEmail).get()
-                                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                    if (task.isSuccessful()) {
-                                                        DocumentSnapshot documentSnapshot = task.getResult();
-                                                        if (passwd.equals(documentSnapshot.get("password"))) {
-                                                            FirebaseUtil.databaseReference = firebaseFirestore.collection("candidates").document(userEmail);
-                                                            getActivity().getSupportFragmentManager().beginTransaction()
-                                                                    .replace(R.id.fragment_container, new BasiccvFragment())
-                                                                    .commit();
-                                                        } else {
-                                                            Toast.makeText(getContext(), "Password don't match", Toast.LENGTH_LONG).show();
-                                                        }
-                                                    }
-                                                }
-                                            });
-                                } else {
-                                    Toast.makeText(getContext(), "Email doesn't exists", Toast.LENGTH_LONG).show();
-                                }
-                            }
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()){
+                            getActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                            Toast.makeText(getContext(), "Welcome", Toast.LENGTH_SHORT).show();
+                            Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction()
+                                    .add(R.id.fragment_container, new BasiccvFragment())
+                                    .commit();
                         }
                     }
                 });

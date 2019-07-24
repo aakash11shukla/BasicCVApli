@@ -19,6 +19,12 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.basiccvapli.databinding.FragmentDetailsBinding;
 import com.example.basiccvapli.firebaseUtils.FirebaseUtil;
 import com.example.basiccvapli.viewmodels.DetailsViewModel;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -28,6 +34,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 public class DetailsFragment extends Fragment {
 
@@ -75,29 +82,42 @@ public class DetailsFragment extends Fragment {
         });
     }
 
-    private void validate(String username, String useremail, String userpasswd, String userloc) {
+    private void validate(final String username, final String useremail, final String userpasswd, final String userloc) {
         if (!Patterns.EMAIL_ADDRESS.matcher(useremail).matches()) {
             email.setError("Invalid email id");
             return;
         }
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseAuth auth = FirebaseAuth.getInstance();
-        FirebaseUser user = auth.getCurrentUser();
-        user.updateEmail(useremail);
-        FirebaseUtil.databaseReference = db.collection("candidates").document(useremail);
-
-        Map<String, String> map = new HashMap<>();
-        map.put("name", username);
-        map.put("password", userpasswd);
-        map.put("timestamp", new SimpleDateFormat("MMM d, yyyy 'at' H:mm:ss a z", Locale.ENGLISH).format(new Date()));
-        Map<String, String> hashmap = new HashMap<>();
-        hashmap.put("name", username);
-        hashmap.put("email", useremail);
-        hashmap.put("ph_no", user.getPhoneNumber());
-        hashmap.put("address", userloc);
-
-        viewModel.saveUserDetails(useremail, map);
-        viewModel.saveDetails(hashmap, getActivity());
+        final FirebaseUser user = auth.getCurrentUser();
+        AuthCredential credential = EmailAuthProvider.getCredential(useremail, userpasswd);
+        if (user != null) {
+            user.linkWithCredential(credential)
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                FirebaseUtil.databaseReference = db.collection("candidates").document(useremail);
+                                Map<String, String> map = new HashMap<>();
+                                map.put("name", username);
+                                map.put("password", userpasswd);
+                                map.put("timestamp", new SimpleDateFormat("MMM d, yyyy 'at' H:mm:ss a z", Locale.ENGLISH).format(new Date()));
+                                Map<String, String> hashmap = new HashMap<>();
+                                hashmap.put("name", username);
+                                hashmap.put("email", useremail);
+                                hashmap.put("ph_no", Objects.requireNonNull(user.getPhoneNumber()));
+                                hashmap.put("address", userloc);
+                                viewModel.saveUserDetails(useremail, map);
+                                viewModel.saveDetails(hashmap, getActivity(), userpasswd);
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 }

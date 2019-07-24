@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
                 ((Button) fragment.getView().findViewById(R.id.submit)).setText(getString(R.string.submit));
                 return;
             }
-        } else if (fragment instanceof AuthFragment) {
+        } else if (fragment instanceof AuthFragment || fragment instanceof BasiccvFragment) {
             finish();
         }
         super.onBackPressed();

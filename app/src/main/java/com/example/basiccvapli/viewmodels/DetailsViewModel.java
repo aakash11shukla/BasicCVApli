@@ -27,7 +27,7 @@ public class DetailsViewModel extends ViewModel {
         repository.saveUserDetails(useremail, map);
     }
 
-    public void saveDetails(Map<String, String> hashmap, FragmentActivity fragmentActivity) {
-        repository.saveDetails(hashmap, fragmentActivity);
+    public void saveDetails(Map<String, String> hashmap, FragmentActivity fragmentActivity, String password) {
+        repository.saveDetails(hashmap, fragmentActivity, password);
     }
 }

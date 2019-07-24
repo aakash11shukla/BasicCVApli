@@ -19,6 +19,7 @@ import com.example.basiccvapli.models.PersonalDetails;
 import com.example.basiccvapli.models.Skill;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -26,7 +27,6 @@ import java.util.Map;
 
 public class Repository {
 
-    private LiveData<DataSnapshot> dataSnapshot = null;
     private final FirebaseQueryLiveData liveData;
     private Activity activity;
 
@@ -79,7 +79,7 @@ public class Repository {
         FirebaseFirestore.getInstance().collection("users").document(useremail).set(map);
     }
 
-    public void saveDetails(final Map<String, String> hashmap, final FragmentActivity fragmentActivity) {
+    public void saveDetails(final Map<String, String> hashmap, final FragmentActivity fragmentActivity, final String password) {
         FirebaseUtil.databaseReference.set(hashmap)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override

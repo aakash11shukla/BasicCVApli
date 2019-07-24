@@ -113,7 +113,8 @@ public class SignUpFragment extends Fragment {
 
             @Override
             public void onVerificationCompleted(PhoneAuthCredential credential) {
-                Toast.makeText(getContext(), "Code automatically verified", Toast.LENGTH_SHORT).show();
+
+                Toast.makeText(getContext(), "Code automatically retrieved", Toast.LENGTH_SHORT).show();
                 viewModel.code.setValue(credential.getSmsCode());
                 signInWithPhoneAuthCredential(credential);
             }
@@ -160,6 +161,7 @@ public class SignUpFragment extends Fragment {
     }
 
     private void signInWithPhoneAuthCredential(final PhoneAuthCredential credential) {
+
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
@@ -169,12 +171,13 @@ public class SignUpFragment extends Fragment {
                             if (user.getMetadata().getCreationTimestamp() != user.getMetadata().getLastSignInTimestamp()) {
                                 Toast.makeText(getContext(), "User already exist with this number.", Toast.LENGTH_LONG).show();
                                 return;
+                            }else{
+                                Toast.makeText(getContext(), "Welcome!", Toast.LENGTH_SHORT).show();
+                                PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putBoolean(getString(R.string.detailsCompletedKey), false).apply();
+                                getActivity().getSupportFragmentManager().beginTransaction()
+                                        .replace(R.id.fragment_container, new DetailsFragment())
+                                        .commit();
                             }
-                            user.updatePhoneNumber(credential);
-                            PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putBoolean(getString(R.string.detailsCompletedKey), false).apply();
-                            getActivity().getSupportFragmentManager().beginTransaction()
-                                    .replace(R.id.fragment_container, new DetailsFragment())
-                                    .commit();
                         } else {
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                                 Toast.makeText(getContext(), "Invalid verification code.", Toast.LENGTH_LONG).show();
