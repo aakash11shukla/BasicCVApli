@@ -1,71 +1,50 @@
 {
   "project_info": {
-    "project_number": "418168904012",
-    "firebase_url": "https://aplieducation.firebaseio.com",
-    "project_id": "aplieducation",
-    "storage_bucket": "aplieducation.appspot.com"
+    "project_number": "282801027115",
+    "firebase_url": "https://aplidotai-intern.firebaseio.com",
+    "project_id": "aplidotai-intern",
+    "storage_bucket": "aplidotai-intern.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:418168904012:android:4f0d694c1f05c7fc",
-        "android_client_info": {
-          "package_name": "com.example.apliaieducation"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "418168904012-h3qt5o7jafm6sim18afcu1p0ubiqmnrv.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.apliaieducation",
-            "certificate_hash": "63a254dba8175d1e8808f3a3f35c0ad571a6a679"
-          }
-        },
-        {
-          "client_id": "418168904012-ho4m8s1g683kci3viq7t1hkvn2b3gcf4.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCkANHlC50MpR54e-sT867K2bXUooRiUsQ"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "418168904012-ho4m8s1g683kci3viq7t1hkvn2b3gcf4.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:418168904012:android:bb813db9763fa310",
+        "mobilesdk_app_id": "1:282801027115:android:bb813db9763fa310",
         "android_client_info": {
           "package_name": "com.example.basiccvapli"
         }
       },
       "oauth_client": [
         {
-          "client_id": "418168904012-ho4m8s1g683kci3viq7t1hkvn2b3gcf4.apps.googleusercontent.com",
+          "client_id": "282801027115-redc2e6rjb965trgljpto9ari94rj8uf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.basiccvapli",
+            "certificate_hash": "63a254dba8175d1e8808f3a3f35c0ad571a6a679"
+          }
+        },
+        {
+          "client_id": "282801027115-r1sljv4uul4ph20j8dr80hl1jhkaqbu2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.basiccvapli",
+            "certificate_hash": "a88f6cb9040680e21897a3734b4a6bd2053bb44d"
+          }
+        },
+        {
+          "client_id": "282801027115-ns4rmsboqu4nqteuv76dsgn18pbd8ieu.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCkANHlC50MpR54e-sT867K2bXUooRiUsQ"
+          "current_key": "AIzaSyCR-xUCbNJPA1_Ohn-xBfVYyobfc0efN3c"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "418168904012-ho4m8s1g683kci3viq7t1hkvn2b3gcf4.apps.googleusercontent.com",
+              "client_id": "282801027115-ns4rmsboqu4nqteuv76dsgn18pbd8ieu.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
