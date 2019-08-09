@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.basiccvapli.models.PersonalDetails;
 import com.example.basiccvapli.repository.Repository;
-import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 public class PersonalDetailsViewModel extends ViewModel {
 
@@ -25,11 +25,11 @@ public class PersonalDetailsViewModel extends ViewModel {
 
     private Repository repository;
 
-    public void init(Activity activity) {
-        repository = new Repository(activity);
+    public void init() {
+        repository = new Repository();
     }
 
-    public LiveData<DataSnapshot> getDetails() {
+    public LiveData<DocumentSnapshot> getDetails() {
         return repository.getData();
     }
 

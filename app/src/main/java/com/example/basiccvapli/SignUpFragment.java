@@ -2,12 +2,10 @@ package com.example.basiccvapli;
 
 
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,7 +18,6 @@ import com.example.basiccvapli.databinding.FragmentSignupBinding;
 import com.example.basiccvapli.viewmodels.SignUpViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.AuthResult;
@@ -34,11 +31,6 @@ import java.util.concurrent.TimeUnit;
 
 public class SignUpFragment extends Fragment {
 
-    private TextInputLayout phone;
-    private TextInputLayout otp;
-    private Button submit;
-    private Button code;
-
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     private String mVerificationId;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
@@ -47,11 +39,6 @@ public class SignUpFragment extends Fragment {
 
     private FragmentSignupBinding binding;
     private SignUpViewModel viewModel;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -65,49 +52,15 @@ public class SignUpFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mAuth = FirebaseAuth.getInstance();
-        mAuth.useAppLanguage();
+        mAuth = CommonApplication.getFirebaseAuth();
 
         viewModel = ViewModelProviders.of(this).get(SignUpViewModel.class);
         binding.setSignupviewmodel(viewModel);
-
-        phone = getView().findViewById(R.id.phone_number);
-        otp = getView().findViewById(R.id.otp);
-        submit = getView().findViewById(R.id.submit);
-        code = getView().findViewById(R.id.code);
-
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String number = viewModel.phone_no.getValue();
-                if (otp.getVisibility() == View.GONE) {
-                    if (number == null || number.isEmpty()) {
-                        phone.getEditText().setError("Cannot be empty");
-                    } else {
-                        if (!Patterns.PHONE.matcher(number).matches()) {
-                            phone.getEditText().setError("Invalid format");
-                        }
-                        viewModel.phone_no.setValue(null);
-                        verifyPhoneNumber(number, mResendToken);
-                    }
-                } else {
-                    Toast.makeText(getContext(), "SMS sent to phone number.", Toast.LENGTH_SHORT).show();
-                    verifyPhoneNumber(number, mResendToken);
-                }
-            }
-        });
-
-        code.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String vcode = viewModel.code.getValue();
-                if (vcode == null || vcode.isEmpty()) {
-                    return;
-                }
-                PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, vcode);
-                signInWithPhoneAuthCredential(credential);
-            }
-        });
+        viewModel.submit.setValue(getString(R.string.submit));
+        viewModel.phone_visibilty.setValue(true);
+        viewModel.submit_visibilty.setValue(true);
+        viewModel.otp_visibilty.setValue(false);
+        viewModel.code_visibilty.setValue(false);
 
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
@@ -125,7 +78,7 @@ public class SignUpFragment extends Fragment {
                 if (e instanceof FirebaseTooManyRequestsException) {
                     getActivity().finish();
                 }
-                phone.setError("Verification Failed");
+                Toast.makeText(getContext(), "Verification failed", Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -133,10 +86,10 @@ public class SignUpFragment extends Fragment {
                                    PhoneAuthProvider.ForceResendingToken token) {
                 mVerificationId = verificationId;
                 mResendToken = token;
-                phone.setVisibility(View.GONE);
-                otp.setVisibility(View.VISIBLE);
-                submit.setText("RESEND");
-                code.setVisibility(View.VISIBLE);
+                viewModel.phone_visibilty.setValue(false);
+                viewModel.otp_visibilty.setValue(true);
+                viewModel.submit.setValue(getString(R.string.resend));
+                viewModel.code_visibilty.setValue(true);
             }
         };
     }
@@ -170,11 +123,10 @@ public class SignUpFragment extends Fragment {
                             FirebaseUser user = task.getResult().getUser();
                             if (user.getMetadata().getCreationTimestamp() != user.getMetadata().getLastSignInTimestamp()) {
                                 Toast.makeText(getContext(), "User already exist with this number.", Toast.LENGTH_LONG).show();
-                                return;
-                            }else{
+                            } else {
                                 Toast.makeText(getContext(), "Welcome!", Toast.LENGTH_SHORT).show();
-                                PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putBoolean(getString(R.string.detailsCompletedKey), false).apply();
-                                getActivity().getSupportFragmentManager().beginTransaction()
+                                CommonApplication.getCommonApplication().getEditor().putBoolean(getString(R.string.detailsCompletedKey), false).apply();
+                                CommonApplication.getFragmentManager().beginTransaction()
                                         .replace(R.id.fragment_container, new DetailsFragment())
                                         .commit();
                             }
@@ -185,5 +137,35 @@ public class SignUpFragment extends Fragment {
                         }
                     }
                 });
+    }
+
+    public class SignUpHandler {
+
+        public void onClickSubmit() {
+            String number = viewModel.phone_no.getValue();
+            if (viewModel.otp_visibilty.getValue() == true) {
+                if (number == null || number.isEmpty()) {
+                    Toast.makeText(getContext(), "Cannot be empty!", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (!Patterns.PHONE.matcher(number).matches()) {
+                        Toast.makeText(getContext(), "Invalid Format!!", Toast.LENGTH_SHORT).show();
+                    }
+                    viewModel.phone_no.setValue(null);
+                    verifyPhoneNumber(number, mResendToken);
+                }
+            } else {
+                Toast.makeText(getContext(), "SMS sent to phone number.", Toast.LENGTH_SHORT).show();
+                verifyPhoneNumber(number, mResendToken);
+            }
+        }
+
+        public void onClickVerifyCode() {
+            String vcode = viewModel.code.getValue();
+            if (vcode == null || vcode.isEmpty()) {
+                return;
+            }
+            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, vcode);
+            signInWithPhoneAuthCredential(credential);
+        }
     }
 }

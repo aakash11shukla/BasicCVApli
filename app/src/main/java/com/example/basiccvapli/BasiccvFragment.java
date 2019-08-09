@@ -11,10 +11,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.basiccvapli.firebaseUtils.FirebaseUtil;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.Objects;
 
 
-public class BasiccvFragment extends Fragment implements View.OnClickListener {
+public class BasiccvFragment extends Fragment {
 
     private FragmentManager fragmentManager;
 
@@ -33,43 +37,62 @@ public class BasiccvFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (getView() != null) {
-            getView().findViewById(R.id.experience_button).setOnClickListener(this);
-            getView().findViewById(R.id.skills_button).setOnClickListener(this);
-            getView().findViewById(R.id.education_button).setOnClickListener(this);
-            getView().findViewById(R.id.personal_button).setOnClickListener(this);
-            getView().findViewById(R.id.internship_button).setOnClickListener(this);
-        }
+        FirebaseUtil.databaseReference = FirebaseFirestore.getInstance().collection("candidates").document(FirebaseAuth.getInstance().getCurrentUser().getEmail());
     }
 
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        ListFragment fragment = new ListFragment();
-        Bundle bundle = new Bundle();
-        if (id == R.id.experience_button) {
+    public class BasiccvHandler {
+
+        public void onClickExperience() {
+            ListFragment fragment = new ListFragment();
+            Bundle bundle = new Bundle();
             bundle.putString("list", getString(R.string.experience));
             fragment.setArguments(bundle);
-        } else if (id == R.id.personal_button) {
+            CommonApplication.getFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(ListFragment.class.getSimpleName())
+                    .commit();
+        }
+
+        public void onClickInternship() {
+            ListFragment fragment = new ListFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("list", getString(R.string.Internships));
+            fragment.setArguments(bundle);
+            CommonApplication.getFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(ListFragment.class.getSimpleName())
+                    .commit();
+        }
+
+        public void onClickEducation() {
+            ListFragment fragment = new ListFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("list", getString(R.string.education));
+            fragment.setArguments(bundle);
+            CommonApplication.getFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(ListFragment.class.getSimpleName())
+                    .commit();
+        }
+
+        public void onClickSkill() {
+            ListFragment fragment = new ListFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("list", getString(R.string.skills));
+            fragment.setArguments(bundle);
+            CommonApplication.getFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(ListFragment.class.getSimpleName())
+                    .commit();
+        }
+
+        public void onClickPersonalDetail() {
             PersonalDetailsFragment personalDetailsFragment = new PersonalDetailsFragment();
-            fragmentManager.beginTransaction()
+            CommonApplication.getFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, personalDetailsFragment)
                     .addToBackStack(PersonalDetailsFragment.class.getSimpleName())
                     .commit();
-            return;
-        } else if (id == R.id.education_button) {
-            bundle.putString("list", getString(R.string.education));
-            fragment.setArguments(bundle);
-        } else if (id == R.id.skills_button) {
-            bundle.putString("list", getString(R.string.skills));
-            fragment.setArguments(bundle);
-        } else {
-            bundle.putString("list", getString(R.string.Internships));
-            fragment.setArguments(bundle);
         }
-        fragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .addToBackStack(ListFragment.class.getSimpleName())
-                .commit();
+
     }
 }

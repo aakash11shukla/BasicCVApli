@@ -1,14 +1,12 @@
 package com.example.basiccvapli.viewmodels;
 
-import android.app.Activity;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.basiccvapli.models.Skill;
 import com.example.basiccvapli.repository.Repository;
-import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 public class SkillViewModel extends ViewModel {
 
@@ -16,15 +14,15 @@ public class SkillViewModel extends ViewModel {
 
     private Repository repository;
 
-    public void init(Activity activity) {
-        repository = new Repository(activity);
+    public void init() {
+        repository = new Repository();
     }
 
     public void save(Skill skill) {
         repository.saveSkill(skill);
     }
 
-    public LiveData<DataSnapshot> getDetails() {
+    public LiveData<DocumentSnapshot> getDetails() {
         return repository.getData();
     }
 

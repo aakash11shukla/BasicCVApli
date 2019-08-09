@@ -39,7 +39,7 @@ public class InternshipsFragment extends Fragment {
         FragmentInternshipsBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_internships, container, false);
         binding.setLifecycleOwner(this);
         viewModel = ViewModelProviders.of(this).get(InternshipViewModel.class);
-        viewModel.init(getActivity());
+        viewModel.init();
         fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
         binding.setInternshipviewmodel(viewModel);
         return binding.getRoot();

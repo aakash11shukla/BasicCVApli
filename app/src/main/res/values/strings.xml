@@ -16,7 +16,6 @@
     <string name="to">To</string>
     <string name="addExperience">ADD EXPERIENCE</string>
     <string name="click_to_set_the_date">Click to set the date</string>
-    <string name="add_experience">Add Experience</string>
     <string name="experiences">Experiences</string>
     <string name="updatedetails">Update Details</string>
     <string name="institutename">Institute Name</string>
@@ -97,5 +96,7 @@
     <string name="detailsCompletedKey">DetailsCompletedKey</string>
     <string name="full_name">Full name</string>
     <string name="password">Password</string>
+    <string name="resend">RESEND</string>
+    <string name="addEducation">ADD EDUCATION</string>
 
 </resources>

@@ -1,14 +1,12 @@
 package com.example.basiccvapli.viewmodels;
 
-import android.app.Activity;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.basiccvapli.models.Experience;
 import com.example.basiccvapli.repository.Repository;
-import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 public class ExperienceViewModel extends ViewModel {
 
@@ -18,18 +16,19 @@ public class ExperienceViewModel extends ViewModel {
     public MutableLiveData<String> location = new MutableLiveData<>();
     public MutableLiveData<String> from = new MutableLiveData<>();
     public MutableLiveData<String> to = new MutableLiveData<>();
+    public MutableLiveData<String> update = new MutableLiveData<>();
 
     private Repository repository;
 
-    public void init(Activity activity) {
-        repository = new Repository(activity);
+    public void init() {
+        repository = new Repository();
     }
 
     public void save(Experience experience) {
         repository.saveExperience(experience);
     }
 
-    public LiveData<DataSnapshot> getDetails() {
+    public LiveData<DocumentSnapshot> getDetails() {
         return repository.getData();
     }
 

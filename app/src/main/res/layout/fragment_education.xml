@@ -4,9 +4,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="educationviewmodel"
             type="com.example.basiccvapli.viewmodels.EducationViewModel" />
+
+        <variable
+            name="handler"
+            type="com.example.basiccvapli.EducationFragment.EducationHandler" />
     </data>
 
     <RelativeLayout
@@ -28,7 +33,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8sp"
-                    android:spinnerMode="dropdown"/>
+                    android:spinnerMode="dropdown" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
@@ -41,7 +46,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/institutename"
                         android:text="@={educationviewmodel.instituteName}"
-                        android:textSize="18sp"/>
+                        android:textSize="18sp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -56,7 +61,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:spinnerMode="dropdown"/>
+                        android:spinnerMode="dropdown" />
 
                     <EditText
                         android:id="@+id/secondaryper_edittext"
@@ -64,8 +69,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:inputType="numberDecimal"
-                        android:text="@={educationviewmodel.marks}"
-                        android:maxLength="6" />
+                        android:maxLength="6"
+                        android:text="@={educationviewmodel.marks}" />
 
                 </LinearLayout>
 
@@ -104,6 +109,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:hint="@string/click_to_set_the_date"
+                        android:onClick="@{(v)->handler.onClickDate(v)}"
                         android:text="@={educationviewmodel.from}"
                         android:textSize="18sp" />
 
@@ -129,6 +135,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:hint="@string/click_to_set_the_date"
+                        android:onClick="@{(v)->handler.onClickDate(v)}"
                         android:text="@={educationviewmodel.to}"
                         android:textSize="18sp" />
 
@@ -144,7 +151,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:background="@color/colorPrimary"
-            android:text="@string/updatedetails"
+            android:onClick="@{()->handler.onClickUpdateDetails()}"
+            android:text="@={educationviewmodel.update}"
             android:textColor="@color/white" />
 
     </RelativeLayout>

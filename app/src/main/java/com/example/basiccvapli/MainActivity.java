@@ -7,48 +7,42 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
-import com.example.basiccvapli.firebaseUtils.FirebaseUtil;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
-
-    private FirebaseAuth firebaseAuth;
-    private FirebaseAuth.AuthStateListener authStateListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FirebaseApp.initializeApp(this);
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        CommonApplication.setFragmentManager(getSupportFragmentManager());
         if (savedInstanceState == null) {
             if (!PreferenceManager.getDefaultSharedPreferences(this).contains(getString(R.string.detailsCompletedKey)) || !PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.detailsCompletedKey), false)) {
-                fragmentManager.beginTransaction()
+                CommonApplication.getFragmentManager().beginTransaction()
                         .add(R.id.fragment_container, new DetailsFragment())
                         .commit();
             } else {
-                fragmentManager.beginTransaction()
+                CommonApplication.getFragmentManager().beginTransaction()
                         .add(R.id.fragment_container, new BasiccvFragment())
                         .commit();
             }
         }
 
-        firebaseAuth = FirebaseAuth.getInstance();
-        authStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if (firebaseAuth.getCurrentUser() == null) {
-                    FirebaseUtil.signIn(getSupportFragmentManager());
-                }
-            }
-        };
-        firebaseAuth.addAuthStateListener(authStateListener);
+//        firebaseAuth = FirebaseAuth.getInstance();
+//        authStateListener = new FirebaseAuth.AuthStateListener() {
+//            @Override
+//            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+//                if (firebaseAuth.getCurrentUser() == null) {
+//                    FirebaseUtil.signIn(getSupportFragmentManager());
+//                }
+//            }
+//        };
+//        firebaseAuth.addAuthStateListener(authStateListener);
     }
 
     @Override
@@ -63,12 +57,6 @@ public class MainActivity extends AppCompatActivity {
             FirebaseAuth.getInstance().signOut();
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        firebaseAuth.removeAuthStateListener(authStateListener);
     }
 
     @Override
@@ -87,6 +75,5 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
         super.onBackPressed();
-
     }
 }

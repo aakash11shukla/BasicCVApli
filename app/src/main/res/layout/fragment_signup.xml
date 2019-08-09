@@ -5,9 +5,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View" />
         <variable
             name="signupviewmodel"
             type="com.example.basiccvapli.viewmodels.SignUpViewModel" />
+        <variable
+            name="handler"
+            type="com.example.basiccvapli.SignUpFragment.SignUpHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,6 +24,7 @@
             android:id="@+id/phone_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="@{safeUnbox(signupviewmodel.phone_visibilty) ? View.VISIBLE:View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -37,7 +42,7 @@
             android:id="@+id/otp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
+            android:visibility="@{safeUnbox(signupviewmodel.otp_visibilty) ? View.VISIBLE:View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -55,7 +60,9 @@
             android:id="@+id/submit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/submit"
+            android:text="@{signupviewmodel.submit}"
+            android:visibility="@{safeUnbox(signupviewmodel.submit_visibilty) ? View.VISIBLE:View.GONE}"
+            android:onClick="@{() -> handler.onClickSubmit()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -67,7 +74,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/submit_code"
-            android:visibility="gone"
+            android:visibility="@{safeUnbox(signupviewmodel.code_visibilty) ? View.VISIBLE:View.GONE}"
+            android:onClick="@{()->handler.onClickVerifyCode()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -52,7 +52,7 @@ public class PersonalDetailsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         viewModel = ViewModelProviders.of(this).get(PersonalDetailsViewModel.class);
-        viewModel.init(getActivity());
+        viewModel.init();
         FragmentPersonalDetailsBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_personal_details, container, false);
         binding.setPersonaldetailsviewmodel(viewModel);
         binding.setLifecycleOwner(this);
@@ -64,26 +64,26 @@ public class PersonalDetailsFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        viewModel.getDetails().observe(this, new Observer<DataSnapshot>() {
-            @Override
-            public void onChanged(DataSnapshot dataSnapshot) {
-                if (dataSnapshot != null) {
-                    PersonalDetails personalDetails = dataSnapshot.child(getString(R.string.personalDetails)).getValue(PersonalDetails.class);
-                    if (personalDetails != null) {
-                        viewModel.filepath.setValue(personalDetails.getProfileImage());
-                        viewModel.permanentAddress.setValue(personalDetails.getPermanentAddress());
-                        viewModel.pinCode.setValue(personalDetails.getPincode());
-                        viewModel.homeTown.setValue(personalDetails.getHometown());
-                        viewModel.email.setValue(personalDetails.getEmail());
-                        viewModel.aadharNo.setValue(personalDetails.getAadharNumber());
-                        viewModel.name.setValue(personalDetails.getName());
-                        viewModel.maritalStatus.setValue(personalDetails.getMaritialStatus());
-                        viewModel.dob.setValue(personalDetails.getDateOfBirth());
-                        viewModel.gender.setValue(personalDetails.getGender());
-                    }
-                }
-            }
-        });
+//        viewModel.getDetails().observe(this, new Observer<DataSnapshot>() {
+//            @Override
+//            public void onChanged(DataSnapshot dataSnapshot) {
+//                if (dataSnapshot != null) {
+//                    PersonalDetails personalDetails = dataSnapshot.child(getString(R.string.personalDetails)).getValue(PersonalDetails.class);
+//                    if (personalDetails != null) {
+//                        viewModel.filepath.setValue(personalDetails.getProfileImage());
+//                        viewModel.permanentAddress.setValue(personalDetails.getPermanentAddress());
+//                        viewModel.pinCode.setValue(personalDetails.getPincode());
+//                        viewModel.homeTown.setValue(personalDetails.getHometown());
+//                        viewModel.email.setValue(personalDetails.getEmail());
+//                        viewModel.aadharNo.setValue(personalDetails.getAadharNumber());
+//                        viewModel.name.setValue(personalDetails.getName());
+//                        viewModel.maritalStatus.setValue(personalDetails.getMaritialStatus());
+//                        viewModel.dob.setValue(personalDetails.getDateOfBirth());
+//                        viewModel.gender.setValue(personalDetails.getGender());
+//                    }
+//                }
+//            }
+//        });
     }
 
     @Override

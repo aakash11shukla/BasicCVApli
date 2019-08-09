@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
@@ -30,7 +29,7 @@ import com.example.basiccvapli.viewmodels.EducationViewModel;
 import com.example.basiccvapli.viewmodels.ExperienceViewModel;
 import com.example.basiccvapli.viewmodels.InternshipViewModel;
 import com.example.basiccvapli.viewmodels.SkillViewModel;
-import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -38,7 +37,6 @@ import java.util.Objects;
 
 public class ListFragment extends Fragment {
 
-    private FragmentManager fragmentManager;
     private Fragment fragment;
     private String tag;
     private ListAdapter adapter;
@@ -48,7 +46,6 @@ public class ListFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
     }
 
     @Override
@@ -60,7 +57,7 @@ public class ListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        LiveData<DataSnapshot> liveData = null;
+        LiveData<DocumentSnapshot> liveData = null;
 
         if (getArguments() != null) {
             type = getArguments().getString("list");
@@ -68,27 +65,27 @@ public class ListFragment extends Fragment {
                 ViewModel viewModel;
                 if (type.equals(getString(R.string.experience))) {
                     viewModel = ViewModelProviders.of(this).get(ExperienceViewModel.class);
-                    ((ExperienceViewModel) viewModel).init(getActivity());
+                    ((ExperienceViewModel) viewModel).init();
                     liveData = ((ExperienceViewModel) viewModel).getDetails();
                     fragment = new ExperienceFragment();
                     tag = ExperienceFragment.class.getSimpleName();
                     adapter = new ExperienceAdapter(null);
                 } else if (type.equals(getString(R.string.education))) {
                     viewModel = ViewModelProviders.of(this).get(EducationViewModel.class);
-                    ((EducationViewModel) viewModel).init(getActivity());
+                    ((EducationViewModel) viewModel).init();
                     liveData = ((EducationViewModel) viewModel).getDetails();
                     fragment = new EducationFragment();
                     tag = EducationFragment.class.getSimpleName();
                 } else if (type.equals(getString(R.string.skills))) {
                     viewModel = ViewModelProviders.of(this).get(SkillViewModel.class);
-                    ((SkillViewModel) viewModel).init(getActivity());
+                    ((SkillViewModel) viewModel).init();
                     liveData = ((SkillViewModel) viewModel).getDetails();
                     fragment = new SkillsFragment();
                     tag = SkillsFragment.class.getSimpleName();
                     adapter = new SkillAdapter(null);
                 } else if (type.equals(getString(R.string.Internships))) {
                     viewModel = ViewModelProviders.of(this).get(InternshipViewModel.class);
-                    ((InternshipViewModel) viewModel).init(getActivity());
+                    ((InternshipViewModel) viewModel).init();
                     liveData = ((InternshipViewModel) viewModel).getDetails();
                     fragment = new InternshipsFragment();
                     tag = InternshipsFragment.class.getSimpleName();
@@ -97,65 +94,54 @@ public class ListFragment extends Fragment {
             }
         }
 
-
-        Objects.requireNonNull(getView()).findViewById(R.id.add_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, fragment)
-                        .addToBackStack(tag)
-                        .commit();
-            }
-        });
-
         final RecyclerView recyclerView = Objects.requireNonNull(getView()).findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
 
         if (liveData != null) {
-            liveData.observe(getViewLifecycleOwner(), new Observer<DataSnapshot>() {
+            liveData.observe(getViewLifecycleOwner(), new Observer<DocumentSnapshot>() {
                 @Override
-                public void onChanged(DataSnapshot dataSnapshot) {
+                public void onChanged(DocumentSnapshot dataSnapshot) {
                     ArrayList<Experience> experiences = new ArrayList<>();
                     ArrayList<Skill> skills = new ArrayList<>();
                     ArrayList<Education> educations = new ArrayList<>();
                     ArrayList<Internship> internships = new ArrayList<>();
-                    if (dataSnapshot != null && dataSnapshot.child(type).hasChildren()) {
-                        for (DataSnapshot ds : dataSnapshot.child(type).getChildren()) {
-                            if (type.equals(getString(R.string.experience))) {
-                                final Experience experience = ds.getValue(Experience.class);
-                                experience.setEid(ds.getKey());
-                                experiences.add(experience);
-                            } else if (type.equals(getString(R.string.skills))) {
-                                final Skill skill = ds.getValue(Skill.class);
-                                skill.setSid(ds.getKey());
-                                skills.add(skill);
-                            } else if (type.equals(getString(R.string.Internships))) {
-                                final Internship internship = ds.getValue(Internship.class);
-                                internship.setIid(ds.getKey());
-                                internships.add(internship);
-                            } else if (type.equals(getString(R.string.education))) {
-                                final Education education = ds.getValue(Education.class);
-                                education.setEdid(ds.getKey());
-                                educations.add(education);
-                            }
-                        }
-                        if (type.equals(getString(R.string.experience))) {
-                            setExperienceAdapter(experiences);
-                            ((ExperienceAdapter) adapter).submitList(experiences);
-                        } else if (type.equals(getString(R.string.skills))) {
-                            setSkillAdapter(skills);
-                            ((SkillAdapter) adapter).submitList(skills);
-                        } else if (type.equals(getString(R.string.Internships))) {
-                            setInternshipAdapter(internships);
-                            ((InternshipAdapter) adapter).submitList(internships);
-                        } else if (type.equals(getString(R.string.education))) {
-                            setEducationAdapter(educations);
-                            ((EducationAdapter) adapter).submitList(educations);
-                        }
-                        recyclerView.setAdapter(adapter);
+//                    if (dataSnapshot != null && dataSnapshot.child(type).hasChildren()) {
+//                        for (DataSnapshot ds : dataSnapshot.child(type).getChildren()) {
+//                            if (type.equals(getString(R.string.experience))) {
+//                                final Experience experience = ds.getValue(Experience.class);
+//                                experience.setEid(ds.getKey());
+//                                experiences.add(experience);
+//                            } else if (type.equals(getString(R.string.skills))) {
+//                                final Skill skill = ds.getValue(Skill.class);
+//                                skill.setSid(ds.getKey());
+//                                skills.add(skill);
+//                            } else if (type.equals(getString(R.string.Internships))) {
+//                                final Internship internship = ds.getValue(Internship.class);
+//                                internship.setIid(ds.getKey());
+//                                internships.add(internship);
+//                            } else if (type.equals(getString(R.string.education))) {
+//                                final Education education = ds.getValue(Education.class);
+//                                education.setEdid(ds.getKey());
+//                                educations.add(education);
+//                            }
+//                        }
+//                    }
+                    if (type.equals(getString(R.string.experience))) {
+                        setExperienceAdapter(experiences);
+                        ((ExperienceAdapter) adapter).submitList(experiences);
+                    } else if (type.equals(getString(R.string.skills))) {
+                        setSkillAdapter(skills);
+                        ((SkillAdapter) adapter).submitList(skills);
+                    } else if (type.equals(getString(R.string.Internships))) {
+                        setInternshipAdapter(internships);
+                        ((InternshipAdapter) adapter).submitList(internships);
+                    } else if (type.equals(getString(R.string.education))) {
+                        setEducationAdapter(educations);
+                        ((EducationAdapter) adapter).submitList(educations);
                     }
+                    recyclerView.setAdapter(adapter);
                 }
             });
         }
@@ -169,7 +155,7 @@ public class ListFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putParcelable(getString(R.string.skills), skill);
                 fragment.setArguments(bundle);
-                fragmentManager.beginTransaction()
+                CommonApplication.getFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, fragment)
                         .addToBackStack(getString(R.string.experience))
                         .commit();
@@ -185,7 +171,7 @@ public class ListFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putParcelable(getString(R.string.experience), experience);
                 fragment.setArguments(bundle);
-                fragmentManager.beginTransaction()
+                CommonApplication.getFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, fragment)
                         .addToBackStack(tag)
                         .commit();
@@ -201,7 +187,7 @@ public class ListFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putParcelable(getString(R.string.Internships), internship);
                 fragment.setArguments(bundle);
-                fragmentManager.beginTransaction()
+                CommonApplication.getFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, fragment)
                         .addToBackStack(tag)
                         .commit();
@@ -217,11 +203,22 @@ public class ListFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putParcelable(getString(R.string.education), education);
                 fragment.setArguments(bundle);
-                fragmentManager.beginTransaction()
+                CommonApplication.getFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, fragment)
                         .addToBackStack(tag)
                         .commit();
             }
         });
+    }
+
+    public class ListHandler {
+
+        public void onClickAdd() {
+            CommonApplication.getFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(tag)
+                    .commit();
+        }
+
     }
 }

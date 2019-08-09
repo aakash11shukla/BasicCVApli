@@ -1,7 +1,5 @@
 package com.example.basiccvapli.viewmodels;
 
-import android.app.Activity;
-
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -19,8 +17,8 @@ public class DetailsViewModel extends ViewModel {
 
     private Repository repository;
 
-    public void init(Activity activity) {
-        repository = new Repository(activity);
+    public void init() {
+        repository = new Repository();
     }
 
     public void saveUserDetails(String useremail, Map<String, String> map) {
